@@ -7,6 +7,7 @@
 ![Tauri](https://img.shields.io/badge/-Tauri-05122A?style=flat&logo=tauri)&nbsp;
 
 Why? Because I can.
+🚧 Work in progress 🚧
 </div>
 
 ## Installation
