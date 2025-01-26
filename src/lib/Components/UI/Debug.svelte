@@ -13,11 +13,11 @@
 <div>
     <p>{game.network.ping}ms</p>
     <p>{Math.round(fps)} FPS</p>
-    <p>{isWebGL ? "WebGL" : isWebGPU ? "WebGPU" : "NOT WebGL/WebGPU"}</p>
+    <p>{isWebGL ? "WebGL" : isWebGPU ? "WebGPU" : "Canvas"}</p>
 </div>
 
 <style lang="postcss">
     div {
-        font-family: "Hammersmith One";
+        font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
     }
 </style>

@@ -456,7 +456,7 @@
         @apply text-white;
     }
     button {
-        font-family: "Hammersmith One";
+        font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
         @apply h-9 leading-9 pl-2 pr-2 text-white text-left text-xs shadow-sm rounded transition hover:brightness-125;
     }
     button::after {

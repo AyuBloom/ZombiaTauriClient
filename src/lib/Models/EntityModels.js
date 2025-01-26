@@ -1030,11 +1030,10 @@ export default {
       }
     }
   },
-  /*
-  SpellIndicator: class extends te {
-    constructor(t) {
-      super(),
-        (this.spellIndicatorModel = new re()),
+  SpellIndicator: class extends Model {
+    constructor(game, t) {
+      super(game),
+        (this.spellIndicatorModel = new GraphicsNode(this.game)),
         this.spellIndicatorModel.setAlpha(0.1),
         this.addAttachment(this.spellIndicatorModel),
         (this.spellType = t.spellType),
@@ -1089,8 +1088,9 @@ export default {
       for (let e = 0; e < this.iconTotal; e++) {
         if (!this.icons[e]) {
           if (Math.random() > this.iconSpawnTolerance) continue;
-          (this.icons[e] = new oe(
-            `./asset/images/Entity/Spells/${this.spellType}Icon.svg`,
+          (this.icons[e] = new SpriteNode(
+            this.game,
+            `./static/images/Entity/Spells/${this.spellType}Icon.svg`,
           )),
             (this.iconOffsets[e] = 0);
           const t = Math.random() * Math.PI * 2,
@@ -1114,13 +1114,16 @@ export default {
       }
     }
   },
-  ResourcePickup: class extends te {
-    constructor(t) {
-      super(),
+  ResourcePickup: class extends Model {
+    constructor(game, t) {
+      super(game),
         (this.resourceType = ["wood", "stone", "gold"][t.resourcePickupType]),
         (this.resourceType =
           this.resourceType.charAt(0).toUpperCase() + this.resourceType.slice(1));
-      const e = new oe(`./asset/images/Entity/Harvester/${this.resourceType}Pickup.svg`);
+      const e = new SpriteNode(
+        this.game,
+        `./static/images/Entity/Harvester/${this.resourceType}Pickup.svg`,
+      );
       this.addAttachment(e, 1),
         (this.hasDeathFadeEffect = !0),
         (this.deathFadeEffect.fadeOutTime = 150),
@@ -1128,6 +1131,7 @@ export default {
         (this.deathFadeEffect.shouldUpdatePosition = !1);
     }
   },
+  /*
   Visualiser: class extends te {
     constructor(t) {
       super(),

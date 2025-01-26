@@ -27,7 +27,7 @@
 }
 
 @font-face {
-    font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
+    font-family: "Hammersmith One";
     font-style: normal;
     font-weight: 400;
     src: url("./HammersmithOne.ttf") format("truetype");
@@ -36,7 +36,7 @@
 
 h1,
 h2 {
-    font-family: "Hammersmith One";
+    font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
 }
 
 canvas {

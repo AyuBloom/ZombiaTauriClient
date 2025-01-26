@@ -11,6 +11,7 @@
     import BuildingOverlay from "./BuildingOverlay.svelte";
     import MenuIcons from "./MenuIcons.svelte";
     import MenuShop from "./MenuShop.svelte";
+    import Consumables from "./Consumables.svelte";
 
     let { game } = $props();
 </script>
@@ -23,6 +24,7 @@
 
     <!-- Bottom -->
     <MiniMap {game} />
+    <Consumables {game} />
     <ToolBar {game} />
     <BuildingBar {game} />
 

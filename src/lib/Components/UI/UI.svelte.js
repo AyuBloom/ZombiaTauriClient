@@ -3,6 +3,7 @@ import PlacementOverlay from "./PlacementOverlay.svelte.js";
 export default class {
   toolData = $state(null);
   buildingData = $state(null);
+  spellData = $state(null);
 
   playerTick = $state(null);
   lastPlayerTick = $state(null);
@@ -37,6 +38,10 @@ export default class {
       this.game.eventEmitter.on(
         "ToolInfoRpcReceived",
         this.onItemDataReceived.bind(this),
+      );
+      this.game.eventEmitter.on(
+        "SpellInfoRpcReceived",
+        this.onSpellDataReceived.bind(this),
       );
       this.game.eventEmitter.on("EnterWorldResponse", this.onEnterWorld.bind(this));
       this.game.eventEmitter.on(
@@ -88,6 +93,9 @@ export default class {
   onItemDataReceived(t) {
     this.toolData = JSON.parse(t.json);
     this.game.eventEmitter.emit("ToolDataReceived");
+  }
+  onSpellDataReceived(t) {
+    this.spellData = JSON.parse(t.json);
   }
   onPartyInfoUpdate(t) {
     const e = t.length,

@@ -27,6 +27,7 @@
 
     game.eventEmitter.on("SetToolRpcReceived", (t) => {
         console.log(t);
+        // ["Tools", "Armour"].indexOf(tools[e.toolName].class) > -1 &&
         for (const e of t) tools[e.toolName] = e.toolTier;
     });
 </script>
@@ -204,7 +205,7 @@
     @reference "../../../app.css";
 
     button {
-        font-family: "Hammersmith One";
+        font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
     }
     .active {
         @apply bg-black/20;
