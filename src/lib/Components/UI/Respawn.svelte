@@ -49,8 +49,17 @@
 
 {#if isDead}
     <div
-        class="absolute w-1/2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs bg-black/40 p-4 rounded-sm z-40"
+        class="absolute w-1/2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs bg-black/40 p-4 pr-20 rounded-sm z-40"
     >
-        <div>{respawnText}</div>
+        <p class="text-white break-words">{respawnText}</p>
+        <button
+            class="absolute bottom-2 right-2 p-2 text-white text-bold rounded-md bg-accent-green transition hover:brightness-125"
+            onclick={() => {
+                game.network.sendRpc({
+                    name: "Respawn",
+                });
+            }}
+            >Respawn
+        </button>
     </div>
 {/if}

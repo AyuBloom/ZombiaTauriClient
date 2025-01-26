@@ -12,17 +12,19 @@
     import MenuIcons from "./MenuIcons.svelte";
     import MenuShop from "./MenuShop.svelte";
     import Consumables from "./Consumables.svelte";
+    import Chat from "./Chat.svelte";
 
     let { game } = $props();
 </script>
 
 <div class="hud fixed w-screen h-screen z-20">
     <!-- Top -->
-    <Debug {game} />
+    <Chat {game} />
     <MenuIcons {game} />
     <Leaderboard {game} />
 
     <!-- Bottom -->
+    <Debug {game} />
     <MiniMap {game} />
     <Consumables {game} />
     <ToolBar {game} />

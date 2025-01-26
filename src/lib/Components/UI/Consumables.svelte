@@ -133,10 +133,3 @@
         {/if}
     {/each}
 </div>
-
-<style lang="postcss">
-    .disabled {
-        pointer-events: none;
-        opacity: 0.5 !important;
-    }
-</style>

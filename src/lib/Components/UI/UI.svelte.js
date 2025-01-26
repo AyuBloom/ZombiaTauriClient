@@ -56,6 +56,7 @@ export default class {
       this.game.eventEmitter.on("mouseUp", this.onMouseUp.bind(this));
       this.game.eventEmitter.on("mouseDown", this.onMouseDown.bind(this));
       this.game.eventEmitter.on("rightMouseUp", this.onRightMouseUp.bind(this));
+      this.game.eventEmitter.on("27Up", this.hideMenu.bind(this));
       /*
           this.game.eventEmitter.on("SocketOpened", this.onSocketOpened.bind(this)),
           this.game.eventEmitter.on("SocketClosed", this.onSocketClosed.bind(this)),
