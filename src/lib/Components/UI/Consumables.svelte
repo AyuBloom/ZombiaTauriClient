@@ -81,16 +81,10 @@
     game.eventEmitter.on("mouseUp", onMouseUp);
 
     game.eventEmitter.on("CastSpellResponseRpcReceived", (t) => {
-        t.name == this.spellData.name &&
-            ((this.disabled = !0),
-            this.element.classList.add("is-disabled"),
-            setTimeout(() => {
-                (this.disabled = !1), this.element.classList.remove("is-disabled");
-            }, t.cooldown));
+        isDisabled[t.name] = true;
     });
     game.eventEmitter.on("ClearActiveSpellRpcReceived", (t) => {
-        t.name == this.spellData.name &&
-            ((this.disabled = !1), this.element.classList.remove("is-disabled"));
+        delete isDisabled[t.name];
     });
 </script>
 
@@ -100,22 +94,30 @@
             <button
                 type="button"
                 onclick={() => {
-                    if (consumable.class == "Potion") {
-                        game.network.sendRpc({
-                            name: "BuyTool",
-                            toolName: consumable.name,
-                        });
-                        if (
-                            game.ui.playerTick?.gold > consumable.goldCosts &&
-                            game.ui.playerTick?.health < game.ui.playerTick?.maxHealth
-                        ) {
-                            isDisabled[consumable.name] = true;
-                            setTimeout(() => {
-                                delete isDisabled[consumable.name];
-                            }, consumable.purchaseCooldown);
+                    if (game.ui.playerTick?.gold > consumable.goldCosts) {
+                        if (consumable.class == "Potion") {
+                            game.network.sendRpc({
+                                name: "BuyTool",
+                                toolName: consumable.name,
+                            });
+                            if (
+                                game.ui.playerTick?.health < game.ui.playerTick?.maxHealth
+                            ) {
+                                isDisabled[consumable.name] = true;
+                                setTimeout(() => {
+                                    delete isDisabled[consumable.name];
+                                }, consumable.purchaseCooldown);
+                            }
+                        } else if (consumable.buffDurationMs) {
+                            startCasting(consumable.name);
+                        } else {
+                            game.network.sendRpc({
+                                name: "CastSpell",
+                                spellName: consumable.name,
+                                x: 0,
+                                y: 0,
+                            });
                         }
-                    } else if (game.ui.playerTick?.gold > consumable.goldCosts) {
-                        startCasting(consumable.name);
                     }
                 }}
                 class="relative w-10 h-10 p-1 m-1 transition"
