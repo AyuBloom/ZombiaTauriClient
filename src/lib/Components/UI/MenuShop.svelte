@@ -146,9 +146,11 @@
 {#if game.ui.isDisplayingMenu == "Shop"}
     <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
     <div
-        onclick={(t) => {
+        onmouseup={(t) => {
             t.stopPropagation();
-            t.preventDefault();
+        }}
+        onmousedown={(t) => {
+            t.stopPropagation();
         }}
         class="absolute flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md w-[70vw] min-w-110 max-w-140 h-100 p-4 bg-black/30"
     >

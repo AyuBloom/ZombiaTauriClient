@@ -147,6 +147,7 @@ export default class {
       this.PlacementOverlay.placeBuilding();
   }
   onMouseDown({ event: t }) {
+    this.hideMenu();
     if (this.PlacementOverlay.isActive()) {
       this.PlacementOverlay.placeBuilding();
     }
