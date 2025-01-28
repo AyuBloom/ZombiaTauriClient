@@ -12,7 +12,7 @@
     let partyShareKey = $state("");
     let partyLeader = $derived(partyMembers.find((t) => true === t.isLeader).uid);
 
-    let isPlayerLeader = $derived(game.ui.playerPartyLeader);
+    let isPlayerLeader = $derived(partyLeader == game.ui.playerTick?.uid);
     let isRequesting = $state(null);
 
     $effect(() => {
@@ -32,7 +32,7 @@
     game.eventEmitter.on("PartyMembersUpdatedRpcReceived", (t) => {
         partyMembers = t;
     });
-    game.eventEmitter.on("PartyRequestCancelledRpcReceived", () => {
+    game.eventEmitter.on("PartyRequestMetRpcReceived", () => {
         isRequesting = null;
     });
     game.eventEmitter.on("PartyKeyRpcReceived", (t) => {
@@ -127,11 +127,20 @@
 {#snippet Parties()}
     {#if currentTab == "Open Parties"}
         {#if isRequesting}
-            <p
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white z-40"
+            <div
+                class="flex flex-col gap-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40"
             >
-                Requesting to join...
-            </p>
+                <p class="text-white">Requesting to join...</p>
+                <button
+                    onclick={() => {
+                        game.network.sendRpc({
+                            name: "CancelPartyRequest",
+                        });
+                    }}
+                    class="p-2 rounded-sm text-white transition bg-accent-red hover:brightness-125"
+                    >Cancel Request</button
+                >
+            </div>
         {/if}
         <div
             class="{isRequesting
@@ -175,7 +184,7 @@
         onmousedown={(t) => {
             t.stopPropagation();
         }}
-        class="absolute flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-sm w-[70vw] min-w-110 max-w-140 h-100 p-4 bg-black/30"
+        class="absolute flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-sm w-[70vw] min-w-116 max-w-140 h-100 p-4 bg-black/30"
     >
         <button
             class="absolute text-white text-2xl top-2 right-4 rotate-45 transition opacity-70 hover:opacity-100"
@@ -235,7 +244,7 @@
                 class="relative flex flex-row w-full basis-1/2 gap-2 text-white *:rounded-sm *:h-full *:basis-1/2 *:transition *:bg-accent-red *:hover:brightness-125"
             >
                 <button
-                    class={isPlayerLeader ? "" : "disabled"}
+                    class={isPlayerLeader ? "disabled" : ""}
                     onclick={() => {
                         /*
                   if (this.leaveElem.classList.contains("is-disabled"))
@@ -251,7 +260,9 @@
                     }}>Leave Party</button
                 >
                 <button
-                    class={currentParty.isOpen ? "focused" : ""}
+                    class="{currentParty.isOpen ? 'focused' : ''} {isPlayerLeader
+                        ? ''
+                        : 'disabled'}"
                     onclick={() => {
                         game.network.sendRpc({
                             name: "TogglePartyVisibility",

@@ -20,7 +20,9 @@
 
 <div class="absolute bottom-28 left-2 text-white">
     <p class={frameTime > 50 ? "overloaded" : frameTime > 30 ? "stressed" : ""}>
-        {game.network.ping}ms
+        {game.network.ping}ms {frameTime > 50
+            ? `(` + (50 - frameTime).toFixed(2) + `ms)`
+            : ""}
     </p>
     <p>{Math.round(fps)} FPS - {isWebGL ? "WebGL" : isWebGPU ? "WebGPU" : "Canvas"}</p>
 </div>

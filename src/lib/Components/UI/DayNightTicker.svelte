@@ -50,7 +50,7 @@
 </script>
 
 <div
-    class="absolute -left-12 top-1/2 -translate-y-1/2 w-[8.625rem] h-[1.5rem] bg-black/30 rounded-sm -rotate-90"
+    class="absolute -left-12 top-1/2 -translate-y-1/2 w-[8.625rem] h-6 bg-black/30 rounded-sm -rotate-90"
 >
     <div class="ticker" style="background-position: {delta}px 0;"></div>
     {#if nextWave != defaultStartingWave && game.ui.factory !== null}

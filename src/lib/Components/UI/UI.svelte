@@ -14,6 +14,7 @@
     import Consumables from "./Consumables.svelte";
     import Chat from "./Chat.svelte";
     import MenuParties from "./MenuParties.svelte";
+    import PipOverlay from "./PipOverlay.svelte";
 
     let { game } = $props();
 </script>
@@ -43,6 +44,7 @@
     <MenuParties {game} />
 
     <!-- Dynamic -->
+    <PipOverlay {game} />
     <BuildingOverlay {game} />
 
     <DayNightOverlay {game} />
