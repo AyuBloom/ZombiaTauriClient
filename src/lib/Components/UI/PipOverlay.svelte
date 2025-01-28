@@ -99,7 +99,7 @@
     {#each Object.values(resourceGains) as { gain, type, position }, i}
         <p
             class="pip -translate-x-1/2 -translate-y-full text-white"
-            style="left: {position.x}px; top: {position.y - 60 + 16 * i}px"
+            style="left: {position.x}px; top: {position.y - 65 + 16 * i}px"
         >
             {gain > 0 ? "+" + gain.toLocaleString() : gain.toLocaleString()}
             {type}
