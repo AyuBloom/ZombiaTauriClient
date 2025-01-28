@@ -53,7 +53,7 @@
     >
         <p class="text-white break-words">{respawnText}</p>
         <button
-            class="absolute bottom-2 right-2 p-2 text-white text-bold rounded-md bg-accent-green transition hover:brightness-125"
+            class="absolute bottom-2 right-2 p-2 text-white text-bold rounded-sm bg-accent-green transition hover:brightness-125"
             onclick={() => {
                 game.network.sendRpc({
                     name: "Respawn",

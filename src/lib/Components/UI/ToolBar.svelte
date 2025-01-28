@@ -36,7 +36,6 @@
             foundCurrent = n == game.ui.playerTick?.weaponName;
         }
         if (shouldEquip !== game.ui.playerTick?.weaponName) {
-            console.log("shit should like WORK");
             game.network.sendRpc({
                 name: "EquipTool",
                 toolName: shouldEquip,
@@ -57,10 +56,6 @@
         <button
             type="button"
             onclick={() => {
-                console.log("bro?", {
-                    name: "EquipTool",
-                    toolName,
-                });
                 game.network.sendRpc({
                     name: "EquipTool",
                     toolName,

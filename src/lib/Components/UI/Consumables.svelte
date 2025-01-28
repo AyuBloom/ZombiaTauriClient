@@ -8,9 +8,6 @@
     ]);
     const isDisabled = $state({});
     let castingSpell = $state(false);
-    $effect(() => {
-        console.log($state.snapshot(consumablesData));
-    });
 
     let spellIndicatorModel;
 

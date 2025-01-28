@@ -56,32 +56,7 @@ export default class {
       invulnerable: "Boolean",
     };
     this.propTypesArr = Object.keys(this.propTypes);
-    // this.socket.addEventListener("message", this.onSocketMessage.bind(this));
   }
-  /*
-  onSocketMessage(t) {
-    this.sendPingIfNecessary();
-    if ("string" == typeof t.data) return console.log(t.data);
-    const e = this.decode(t.data);
-    switch (e.opcode) {
-      case 4:
-        if (e.allowed) {
-          this.uid = e.uid;
-          this.currentTickNumber = e.startingTick;
-          this.knownEntities = {};
-        }
-        break;
-      case 7:
-        const t = new Date();
-        this.ping = (t.getTime() - this.pingStart.getTime()) / 2;
-        this.pingStart = null;
-        this.pingCompletion = t;
-        break;
-      case 9:
-        e.name == "ModelProps" && this.onModelProps(e.response);
-    }
-  }
-  */
   encode(t, e) {
     const r = new ByteBuffer(100, true);
     switch ((r.writeUint8(t), t)) {

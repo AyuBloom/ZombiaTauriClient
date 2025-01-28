@@ -87,6 +87,6 @@
     }
     input,
     select {
-        @apply w-full h-10 appearance-none mb-2 p-2 text-white text-xs bg-black/30 rounded-md placeholder:text-white/30;
+        @apply w-full h-10 appearance-none mb-2 p-2 text-white text-xs bg-black/30 rounded-sm placeholder:text-white/30;
     }
 </style>

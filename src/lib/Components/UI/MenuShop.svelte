@@ -21,12 +21,7 @@
     let tabs = ["Tools", "Armour"];
     let currentTab = $state(tabs[0]);
 
-    $effect(() => {
-        console.log($state.snapshot(toolData));
-    });
-
     game.eventEmitter.on("SetToolRpcReceived", (t) => {
-        console.log(t);
         // ["Tools", "Armour"].indexOf(tools[e.toolName].class) > -1 &&
         for (const e of t) tools[e.toolName] = e.toolTier;
     });
@@ -60,7 +55,7 @@
         }}
         class="{isMax
             ? 'disabled'
-            : ''} relative flex flex-row gap-2 h-16 w-full bg-white/10 rounded-md p-2"
+            : ''} relative flex flex-row gap-2 h-16 w-full bg-white/10 rounded-sm p-2"
     >
         <img
             class="w-12 h-12"
@@ -152,7 +147,7 @@
         onmousedown={(t) => {
             t.stopPropagation();
         }}
-        class="absolute flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md w-[70vw] min-w-110 max-w-140 h-100 p-4 bg-black/30"
+        class="absolute flex flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-sm w-[70vw] min-w-110 max-w-140 h-100 p-4 bg-black/30"
     >
         <button
             class="absolute text-white text-2xl top-2 right-4 rotate-45 transition opacity-70 hover:opacity-100"
@@ -167,7 +162,7 @@
                 description = "";
                 currentHover = "";
             }}
-            class="flex flex-row basis-5/6 w-full bg-black/20 rounded-md rounded-tl-none"
+            class="flex flex-row basis-5/6 w-full bg-black/20 rounded-sm rounded-tl-none"
         >
             <div
                 class="flex flex-col min-w-3/5 basis-3/5 w-full gap-2 p-2 overflow-y-auto"

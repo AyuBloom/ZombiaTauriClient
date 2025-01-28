@@ -13,6 +13,7 @@
     import MenuShop from "./MenuShop.svelte";
     import Consumables from "./Consumables.svelte";
     import Chat from "./Chat.svelte";
+    import MenuParties from "./MenuParties.svelte";
 
     let { game } = $props();
 </script>
@@ -39,6 +40,7 @@
 
     <!-- Center -->
     <MenuShop {game} />
+    <MenuParties {game} />
 
     <!-- Dynamic -->
     <BuildingOverlay {game} />

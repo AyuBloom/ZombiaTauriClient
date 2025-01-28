@@ -189,7 +189,6 @@ export default class {
       r = new DOMParser().parseFromString(e, "image/svg+xml").querySelectorAll("svg"),
       n = new XMLSerializer();
     let i = [];
-    console.log(r);
     r.forEach((t, e) => {
       if (0 == e) return;
       const r = n.serializeToString(t),
