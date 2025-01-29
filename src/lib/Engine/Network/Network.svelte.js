@@ -16,31 +16,10 @@ export default class {
     this.options = {};
   }
   init() {
-    // this.inputPacketManager.init();
     this.game.eventEmitter.on(
       "ModelPropsRpcReceived",
       this.codec.onModelProps.bind(this.codec),
     );
-    /*
-      document.onvisibilitychange = () => {
-          if ("visible" == document.visibilityState && 1 == dr.network.connected) {
-              if (this.packetArr.length >= this.packetCountLimit)
-                  return console.log("Tab was hidden for too long. Reporting as desynced."),
-                  this.packetArr.length = 0,
-                  this.knownEntities = {},
-                  dr.renderer.onServerDesync(),
-                  dr.renderer.world.onServerDesync(),
-                  dr.renderer.replicator.onServerDesync(),
-                  this.outOfSync = !0,
-                  void dr.network.sendRpc({
-                      name: "OutOfSync"
-                  });
-              for (console.log(`Page is now visible! Decoding ${this.packetArr.length} packets...`); this.packetArr.length > 0; )
-                  this.handleEntityUpdate(this.decode(this.packetArr[0])),
-                  this.packetArr.shift()
-          }
-      }
-      */
   }
   setConnectionData(t, e, r) {
     this.options = {

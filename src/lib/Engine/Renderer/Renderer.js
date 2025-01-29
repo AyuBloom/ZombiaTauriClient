@@ -98,7 +98,7 @@ export default class {
     this.firstPerformance = null;
 
     this.followingObject = null;
-    // this.contextLostTime = 0;
+    this.contextLostTime = 0;
 
     this.preloadAssets();
     window.addEventListener("resize", this.onWindowResize.bind(this));
@@ -137,12 +137,12 @@ export default class {
     });
     this.renderer.canvas.oncontextmenu = (t) => t.preventDefault();
     document.body.children[0].appendChild(this.renderer.canvas);
-    /*
+
     this.renderer.canvas.addEventListener("webglcontextlost", async (t) => {
       document.body.children[0].removeChild(this.renderer.canvas),
         await this.initialiseRendererInstance();
     });
-    */
+
     this.scene = new Node(this.game);
 
     this.entitiesLayer = new LayerNode(this.game);
@@ -208,6 +208,10 @@ export default class {
       // document.getElementById("hud-intro-play").classList.remove("is-disabled"),
       i.length = 0;
     });
+  }
+  onServerDesync() {
+    this.clearFadingAttachments();
+    console.log("Server desynced, renderer has removed all fading attachments");
   }
   onEnterWorld(t) {
     this.clearFadingAttachments();
@@ -325,17 +329,15 @@ export default class {
     } else this[r].removeAttachment(t);
   }
   update(t) {
-    /*
     if (
-      1 == dr.renderer.renderer.renderer.context.isLost &&
+      1 == this.renderer.renderer.context.isLost &&
       performance.now() - this.contextLostTime > 5e3
-    )
-      return (
-        console.log("Context has been lost for too long! Re-initialising PIXI."),
-        document.body.removeChild(this.renderer.canvas),
-        void this.initialisePixiInstance()
-      );
-      */
+    ) {
+      console.log("Context has been lost for too long! Re-initialising PIXI.");
+      document.body.removeChild(this.renderer.canvas);
+      this.initialisePixiInstance();
+      return;
+    }
     if (null === this.firstPerformance)
       return (this.firstPerformance = performance.now());
     const e = performance.now(),

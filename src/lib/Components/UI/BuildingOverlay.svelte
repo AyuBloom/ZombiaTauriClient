@@ -282,8 +282,12 @@
     });
 
     game.eventEmitter.on("EntityUpdate", (t) => {
-        if (null != buildingUid && void 0 !== t.entities[buildingUid]) {
-            update();
+        try {
+            if (null != buildingUid && void 0 !== t.entities[buildingUid]) {
+                update();
+            }
+        } catch {
+            console.log(t);
         }
     });
 

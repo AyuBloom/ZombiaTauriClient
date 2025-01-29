@@ -5,8 +5,10 @@ export default class {
     this.game = game;
 
     this.socket = null;
+
     this.currentTickNumber = 0;
     this.knownEntities = {};
+
     this.propTypes = {
       aimingYaw: "Uint16",
       aggroEnabled: "Boolean",
@@ -56,6 +58,35 @@ export default class {
       invulnerable: "Boolean",
     };
     this.propTypesArr = Object.keys(this.propTypes);
+
+    this.outOfSync = false;
+    this.packetArr = [];
+    this.packetCountLimit = 200;
+
+    document.onvisibilitychange = () => {
+      if ("visible" == document.visibilityState && 1 == this.game.network.connected) {
+        if (this.packetArr.length >= this.packetCountLimit) {
+          console.log("Tab was hidden for too long. Reporting as desynced.");
+          this.packetArr.length = 0;
+          this.knownEntities = {};
+
+          this.game.renderer.onServerDesync();
+          this.game.renderer.world.onServerDesync();
+          this.game.renderer.replicator.onServerDesync();
+
+          this.outOfSync = true;
+          this.game.network.sendRpc({
+            name: "OutOfSync",
+          });
+          return;
+        }
+        console.log(`Page is now visible! Decoding ${this.packetArr.length} packets...`);
+        for (; this.packetArr.length > 0; ) {
+          this.game.network.handleEntityUpdate(this.decode(this.packetArr[0]));
+          this.packetArr.shift();
+        }
+      } else console.log("this fires first? or nah?");
+    };
   }
   encode(t, e) {
     const r = new ByteBuffer(100, true);
@@ -238,17 +269,21 @@ export default class {
   }
   encodePing(t, e) {}
   decode(t) {
-    const e = ByteBuffer.wrap(t);
-    e.littleEndian = !0;
+    let e = ByteBuffer.wrap(t);
+    e.littleEndian = true;
     const r = e.readUint8();
+    if (0 == r && "hidden" == document.visibilityState) {
+      this.packetArr.length < this.packetCountLimit && this.packetArr.push(t);
+      e = null;
+      return {};
+    }
     let n;
     switch (r) {
       case 4:
         n = this.decodeEnterWorld(e);
         break;
       case 0:
-        // n = {};
-        n = this.decodeEntityUpdate(e);
+        if (((n = this.decodeEntityUpdate(e)), 1 == n.unsynced)) return {};
         break;
       case 9:
         n = this.decodeRpc(e);
@@ -279,8 +314,20 @@ export default class {
         };
   }
   decodeEntityUpdate(t) {
+    let __ = null;
     let e = ++this.currentTickNumber;
     const r = !!t.readUint8();
+    if (1 == r) {
+      e = t.readUint32();
+      this.currentTickNumber = e;
+      this.outOfSync = false;
+      console.log("Server has resynced, decoding as normal");
+      __ = true;
+    } else if (0 == r && 1 == this.outOfSync) {
+      return {
+        unsynced: true,
+      };
+    }
     const n = t.readVarint32();
     for (let e = 0; e < n; e++) {
       let e = t.readUint16();
@@ -333,6 +380,7 @@ export default class {
       }
     }
     const l = t.readUint16() / 100;
+    __ === true && console.log(o);
     return (
       (this.knownEntities = o),
       {
