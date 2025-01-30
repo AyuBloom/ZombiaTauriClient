@@ -22,6 +22,7 @@
         "Max Drone Count": "maxDrones",
     };
 
+    let shiftDown = $state(false);
     let shouldDisplay = $state(false);
     let alignTop = $state(-999);
     let alignLeft = $state(-999);
@@ -229,23 +230,23 @@
                 }
             }
         }
-        /*
-        e.size > 1
-            ? dr.ui.components.uiPopupOverlay.showConfirmation(
-                  `Are you sure you want to sell all <b>${this.buildingId}</b>s?`,
-                  5e3,
-                  () => {
-                      dr.network.sendRpc({
-                          name: "SellBuilding",
-                          uids: Array.from(e),
-                      });
-                  },
-              )
-            : */
-        game.network.sendRpc({
-            name: "SellBuilding",
-            uids: Array.from(e),
-        });
+        if (e.size > 1) {
+            game.ui.pendingPopups.push({
+                type: "confirmation",
+                message: `Are you sure you want to sell all <b>${buildingId}</b>s?`,
+                callback: () => {
+                    game.network.sendRpc({
+                        name: "SellBuilding",
+                        uids: Array.from(e),
+                    });
+                },
+            });
+        } else {
+            game.network.sendRpc({
+                name: "SellBuilding",
+                uids: Array.from(e),
+            });
+        }
     }
 
     game.eventEmitter.on("mouseUp", () => {
@@ -282,12 +283,8 @@
     });
 
     game.eventEmitter.on("EntityUpdate", (t) => {
-        try {
-            if (null != buildingUid && void 0 !== t.entities[buildingUid]) {
-                update();
-            }
-        } catch {
-            console.log(t);
+        if (null != buildingUid && void 0 !== t.entities[buildingUid]) {
+            update();
         }
     });
 
@@ -304,7 +301,6 @@
     game.eventEmitter.on("69Up", upgradeBuilding);
     game.eventEmitter.on("84Up", sellBuilding);
 
-    /*
     const t = (t) => {
         // shouldUpdateRanges = true;
         if ("Up" == t && 1 == shiftDown) {
@@ -317,7 +313,6 @@
     };
     game.eventEmitter.on("16Down", () => t("Down"));
     game.eventEmitter.on("16Up", () => t("Up"));
-    */
 </script>
 
 {#snippet BuildingStats()}

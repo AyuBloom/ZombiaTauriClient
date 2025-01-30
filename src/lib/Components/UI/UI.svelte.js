@@ -22,6 +22,9 @@ export default class {
   playerPartyCanPlace = $state(false);
 
   isDisplayingMenu = $state(null);
+  announcement = $state(null);
+  popup = $state(undefined);
+  pendingPopups = $state([]);
 
   constructor(game) {
     this.game = game;
@@ -52,6 +55,7 @@ export default class {
         "PartyBuildingRpcReceived",
         this.onPartyBuildingUpdate.bind(this),
       );
+      this.game.eventEmitter.on("FailureRpcReceived", this.onFailure.bind(this));
       this.game.eventEmitter.on("mouseMoved", this.onMouseMoved.bind(this));
       this.game.eventEmitter.on("mouseUp", this.onMouseUp.bind(this));
       this.game.eventEmitter.on("mouseDown", this.onMouseDown.bind(this));
@@ -133,6 +137,12 @@ export default class {
       }
     }
     this.game.eventEmitter.emit("BuildingsUpdated", t);
+  }
+  onFailure(t) {
+    this.pendingPopups.push({
+      message: t.failure,
+      type: "failure",
+    });
   }
   onMouseMoved({ event: t }) {
     this.mousePosition = {

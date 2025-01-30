@@ -105,12 +105,16 @@
                         </div>
                         <button
                             onclick={() => {
-                                // dr.ui.components.uiPopupOverlay.showConfirmation(`Are you sure you want to kick <b>${t.name}</b> from your party?`, 1e4, ( () => {
-                                game.network.sendRpc({
-                                    name: "KickMember",
-                                    uid: parseInt(member.uid),
+                                game.ui.pendingPopups.push({
+                                    type: "confirmation",
+                                    message: `Are you sure you want to kick <b>${member.name}</b> from your party?`,
+                                    callback: () => {
+                                        game.network.sendRpc({
+                                            name: "KickMember",
+                                            uid: parseInt(member.uid),
+                                        });
+                                    },
                                 });
-                                // })
                             }}
                             class="{isPlayerLeader && member.uid !== partyLeader
                                 ? ''
@@ -246,17 +250,15 @@
                 <button
                     class={isPlayerLeader ? "disabled" : ""}
                     onclick={() => {
-                        /*
-                  if (this.leaveElem.classList.contains("is-disabled"))
-                      return;
-                  let t = "Are you sure you want to leave your party?";
-                  null !== dr.ui.factory && (t = "Are you sure you want to abandon your base?"),
-                  dr.ui.components.uiPopupOverlay.showConfirmation(t, 1e4, ( () => {
-                  */
-                        game.network.sendRpc({
-                            name: "LeaveParty",
+                        game.ui.pendingPopups.push({
+                            type: "confirmation",
+                            message: "Are you sure you want to abandon your base?",
+                            callback: () => {
+                                game.network.sendRpc({
+                                    name: "LeaveParty",
+                                });
+                            },
                         });
-                        // })
                     }}>Leave Party</button
                 >
                 <button

@@ -52,7 +52,7 @@
     }}
     class="{isTyping
         ? 'focused'
-        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition"
+        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition pointer-events-none"
 >
     <div class="min-w-78 w-78 h-48 overflow-x-hidden overflow-y-auto" bind:this={chatBox}>
         {#each msgs as { channel, message, name, date }}

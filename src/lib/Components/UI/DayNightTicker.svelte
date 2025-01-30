@@ -34,8 +34,13 @@
             r = t % cycleLength < dayLength;
         if (true === r) {
             let e = dayLength - (t % cycleLength);
-            if (false === announcedNight && e <= dayLength / 5) announcedNight = true;
-            // dr.ui.components.uiAnnouncementOverlay.showAnnouncement("Night is fast approaching. Get to safety...", dayLength / 5 * dr.renderer.replicator.msPerTick))
+            if (false === announcedNight && e <= dayLength / 5) {
+                announcedNight = true;
+                game.ui.announcement = {
+                    announcement: "Night is fast approaching. Get to safety...",
+                    timeout: (dayLength / 5) * game.renderer.replicator.msPerTick,
+                };
+            }
         } else if (false === r) {
             announcedNight = false;
         }

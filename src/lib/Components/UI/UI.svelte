@@ -15,6 +15,8 @@
     import Chat from "./Chat.svelte";
     import MenuParties from "./MenuParties.svelte";
     import PipOverlay from "./PipOverlay.svelte";
+    import AnnouncementOverlay from "./AnnouncementOverlay.svelte";
+    import PopupOverlay from "./PopupOverlay.svelte";
 
     let { game } = $props();
 </script>
@@ -24,6 +26,7 @@
     <Chat {game} />
     <MenuIcons {game} />
     <Leaderboard {game} />
+    <AnnouncementOverlay {game} />
 
     <!-- Bottom -->
     <Debug {game} />
@@ -45,6 +48,7 @@
 
     <!-- Dynamic -->
     <PipOverlay {game} />
+    <PopupOverlay {game} />
     <BuildingOverlay {game} />
 
     <DayNightOverlay {game} />

@@ -314,7 +314,6 @@ export default class {
         };
   }
   decodeEntityUpdate(t) {
-    let __ = null;
     let e = ++this.currentTickNumber;
     const r = !!t.readUint8();
     if (1 == r) {
@@ -322,7 +321,6 @@ export default class {
       this.currentTickNumber = e;
       this.outOfSync = false;
       console.log("Server has resynced, decoding as normal");
-      __ = true;
     } else if (0 == r && 1 == this.outOfSync) {
       return {
         unsynced: true,
@@ -380,7 +378,6 @@ export default class {
       }
     }
     const l = t.readUint16() / 100;
-    __ === true && console.log(o);
     return (
       (this.knownEntities = o),
       {
