@@ -20,6 +20,7 @@ export default class {
       "ModelPropsRpcReceived",
       this.codec.onModelProps.bind(this.codec),
     );
+    document.onvisibilitychange = this.onVisibilityChange.bind(this);
   }
   setConnectionData(t, e, r) {
     this.options = {
@@ -31,14 +32,31 @@ export default class {
   connect() {
     if (!this.connected || !this.connecting) {
       this.connecting = true;
-      this.codec.socket = new WebSocket(
+      this.socket = new WebSocket(
         `ws://server-${this.options.serverData.id}.zombia.io:${this.options.serverData.port}`,
       );
-      this.codec.socket.binaryType = "arraybuffer";
-      this.codec.socket.addEventListener("open", this.onSocketOpen.bind(this));
-      this.codec.socket.addEventListener("close", this.onSocketClose.bind(this));
-      this.codec.socket.addEventListener("message", this.onSocketMessage.bind(this));
+      this.socket.binaryType = "arraybuffer";
+      this.bindAllListeners();
     }
+  }
+  disconnectAllListeners() {
+    this.codec.setSync(false);
+
+    this.socket.onopen = null;
+    this.socket.onmessage = null;
+    this.socket.onclose = null;
+  }
+  bindAllListeners() {
+    this.socket.onopen = this.onSocketOpen.bind(this);
+    this.socket.onmessage = this.onSocketMessage.bind(this);
+    this.socket.onclose = this.onSocketClose.bind(this);
+  }
+  reconnectSocket() {
+    this.bindAllListeners();
+    this.codec.setSync(true, true);
+  }
+  onVisibilityChange() {
+    this.codec.setSync("visible" == document.visibilityState);
   }
   onSocketOpen() {
     this.connected = true;
@@ -89,7 +107,7 @@ export default class {
       ((this.pingStart = new Date()), this.sendPing());
   }
   sendPacket(t, e) {
-    this.codec.socket.readyState === 1 && this.codec.socket.send(this.codec.encode(t, e));
+    this.socket.readyState === 1 && this.socket.send(this.codec.encode(t, e));
   }
   sendEnterWorld(t, e) {
     this.sendPacket(4, {

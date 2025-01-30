@@ -4,8 +4,6 @@ export default class {
   constructor(game) {
     this.game = game;
 
-    this.socket = null;
-
     this.currentTickNumber = 0;
     this.knownEntities = {};
 
@@ -59,34 +57,41 @@ export default class {
     };
     this.propTypesArr = Object.keys(this.propTypes);
 
+    this.inSync = true;
     this.outOfSync = false;
+
     this.packetArr = [];
     this.packetCountLimit = 200;
+  }
+  setSync(sync, totalSync = false) {
+    if (sync != this.inSync) {
+      this.inSync = sync;
+      if (this.inSync) this.sync(totalSync);
+    }
+  }
+  sync(outOfSync = false) {
+    if (1 == this.game.network.connected) {
+      if (this.packetArr.length >= this.packetCountLimit || outOfSync) {
+        console.log("Tab was hidden for too long. Reporting as desynced.");
+        this.packetArr.length = 0;
+        this.knownEntities = {};
 
-    document.onvisibilitychange = () => {
-      if ("visible" == document.visibilityState && 1 == this.game.network.connected) {
-        if (this.packetArr.length >= this.packetCountLimit) {
-          console.log("Tab was hidden for too long. Reporting as desynced.");
-          this.packetArr.length = 0;
-          this.knownEntities = {};
+        this.game.renderer.onServerDesync();
+        this.game.renderer.world.onServerDesync();
+        this.game.renderer.replicator.onServerDesync();
 
-          this.game.renderer.onServerDesync();
-          this.game.renderer.world.onServerDesync();
-          this.game.renderer.replicator.onServerDesync();
-
-          this.outOfSync = true;
-          this.game.network.sendRpc({
-            name: "OutOfSync",
-          });
-          return;
-        }
-        console.log(`Page is now visible! Decoding ${this.packetArr.length} packets...`);
-        for (; this.packetArr.length > 0; ) {
-          this.game.network.handleEntityUpdate(this.decode(this.packetArr[0]));
-          this.packetArr.shift();
-        }
-      } else console.log("this fires first? or nah?");
-    };
+        this.outOfSync = true;
+        this.game.network.sendRpc({
+          name: "OutOfSync",
+        });
+        return;
+      }
+      console.log(`Resyncing socket! Decoding ${this.packetArr.length} packets...`);
+      for (; this.packetArr.length > 0; ) {
+        this.game.network.handleEntityUpdate(this.decode(this.packetArr[0]));
+        this.packetArr.shift();
+      }
+    }
   }
   encode(t, e) {
     const r = new ByteBuffer(100, true);
@@ -272,7 +277,7 @@ export default class {
     let e = ByteBuffer.wrap(t);
     e.littleEndian = true;
     const r = e.readUint8();
-    if (0 == r && "hidden" == document.visibilityState) {
+    if (0 == r && !this.inSync) {
       this.packetArr.length < this.packetCountLimit && this.packetArr.push(t);
       e = null;
       return {};
