@@ -3,7 +3,7 @@
     import Footer from "./Footer.svelte";
     import Leaderboard from "./Leaderboard.svelte";
 
-    import { gameOptions } from "./Intro-shared.svelte.js";
+    import { gameOptions, psk } from "./Intro-shared.svelte.js";
     import servers from "$lib/Assets/servers.json";
 
     const { game } = $props();
@@ -17,15 +17,20 @@
         }
         */
         game.network.setConnectionData(
-            gameOptions.playerName,
-            gameOptions.psk,
-            servers.find((server) => server.id == gameOptions.selectedServer),
+            gameOptions.state.playerName,
+            psk.value,
+            servers.find((server) => server.id == gameOptions.state.selectedServer),
         );
         game.network.connect();
     }
 
     game.eventEmitter.once("EnterWorldResponse", (e) => {
         e.allowed && (inGame = true);
+    });
+
+    gameOptions.start();
+    $effect(() => {
+        gameOptions.state && gameOptions.save();
     });
 </script>
 
@@ -35,9 +40,17 @@
         <div class="relative w-screen text-xl text-white">
             <button
                 type="submit"
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition p-2 rounded-sm bg-green-600 hover:bg-green-500"
-                onclick={connect}>Play</button
+                class="{game.network.connecting || game.network.connected
+                    ? 'disabled'
+                    : ''} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 rounded-sm w-40 transition"
+                onclick={connect}
             >
+                <p class="font-bold text-3xl">Play</p>
+                <hr class="w-full border mt-2 mb-2" />
+                <span class="text-xl"
+                    >{game.util.isActuallyMobile ? "Tap" : "Click"} to enter</span
+                >
+            </button>
             <Footer />
             <Leaderboard />
         </div>
@@ -65,5 +78,9 @@
     .hud-intro::after {
         @apply fixed top-0 bottom-0 left-0 right-0 bg-black/60 -z-10;
         content: " ";
+    }
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5 !important;
     }
 </style>

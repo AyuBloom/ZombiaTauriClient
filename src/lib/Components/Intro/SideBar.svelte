@@ -1,8 +1,6 @@
 <script>
     import servers from "$lib/Assets/servers.json";
-    import { gameOptions } from "./Intro-shared.svelte.js";
-
-    // let gameMode = $state("standard");
+    import { gameOptions, psk } from "./Intro-shared.svelte.js";
 
     const descriptionForModes = {
         standard:
@@ -24,7 +22,7 @@
     }
 
     $effect(() => {
-        gameOptions.selectedServer = defaultServer[gameOptions.mode];
+        gameOptions.state.selectedServer = defaultServer[gameOptions.state.mode];
     });
 </script>
 
@@ -33,26 +31,27 @@
 >
     <div class="hud-intro-modes">
         <h2>Game Modes</h2>
-        <select class="hud-intro-gamemode" bind:value={gameOptions.mode}>
+        <select class="hud-intro-gamemode" bind:value={gameOptions.state.mode}>
             {#each Object.keys(sortedServers) as mode}
                 <option value={mode}
                     >{mode.charAt(0).toUpperCase() + mode.slice(1)}</option
                 >
             {/each}
         </select>
-        <span class="text-white/50 text-xs">{descriptionForModes[gameOptions.mode]}</span>
+        <span class="text-white/50 text-xs"
+            >{descriptionForModes[gameOptions.state.mode]}</span
+        >
     </div>
     <div class="hud-intro-main">
         <h2>Game Options</h2>
         <input
             class="hud-intro-name"
             placeholder="Player name..."
-            bind:value={gameOptions.playerName}
+            bind:value={gameOptions.state.playerName}
         />
-        <select class="hud-intro-servers" bind:value={gameOptions.selectedServer}>
-            <!-- <option value="" selected disabled>Choose server...</option> -->
+        <select class="hud-intro-servers" bind:value={gameOptions.state.selectedServer}>
             {#each Object.entries(sortedServers) as [mode, countries]}
-                {#if gameOptions.mode == mode}
+                {#if gameOptions.state.mode == mode}
                     {#each Object.entries(countries) as [country, servers]}
                         <optgroup label={country}>
                             {#each Object.entries(servers) as [id, server], index}
@@ -68,7 +67,7 @@
         <input
             class="hud-intro-invite"
             placeholder="Invite link..."
-            bind:value={gameOptions.psk}
+            bind:value={psk.value}
         />
     </div>
     <div class="hud-intro-settings">

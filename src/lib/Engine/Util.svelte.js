@@ -1,9 +1,7 @@
 export default class {
+  actuallyIsMobile = $state(false);
   constructor(game) {
     this.game = game;
-
-    this.checkedIfMobile = false;
-    this.actuallyIsMobile = false;
   }
   lerp(t, e, r) {
     return t * (1 - r) + e * r;
@@ -31,14 +29,10 @@ export default class {
     return Math.abs(r ** 2 + n ** 2);
   }
   isMobile() {
-    return (
-      this.checkedIfMobile ||
-      ((this.actuallyIsMobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent,
-        )),
-      (this.checkedIfMobile = true))
-    );
+    return (this.actuallyIsMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ));
   }
   hexToRgb(t) {
     t = t.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, function (t, e, r, n) {

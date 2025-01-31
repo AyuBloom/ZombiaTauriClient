@@ -4,6 +4,8 @@
     import Intro from "$lib/Components/Intro/Intro.svelte";
     import UI from "$lib/Components/UI/UI.svelte";
 
+    import { gameOptions } from "$lib/Components/Intro/Intro-shared.svelte.js";
+
     const game = Game;
     game.init();
 

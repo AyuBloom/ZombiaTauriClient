@@ -3,12 +3,15 @@ import Codec from "./Codec.js";
 export default class {
   ping = $state();
 
+  connected = $state(false);
+  connecting = $state(false);
+
   constructor(game) {
     this.game = game;
     this.codec = new Codec(game);
 
-    this.connected = false;
-    this.connecting = false;
+    this.socket = null;
+    this.instances = {};
 
     this.pingStart = null;
     this.pingCompletion = null;
@@ -39,19 +42,19 @@ export default class {
       this.bindAllListeners();
     }
   }
-  disconnectAllListeners() {
+  bindAllListeners() {
+    this.socket.onopen = this.onSocketOpen.bind(this);
+    this.socket.onmessage = this.onSocketMessage.bind(this);
+    this.socket.onclose = this.onSocketClose.bind(this);
+  }
+  unbindSocket() {
     this.codec.setSync(false);
 
     this.socket.onopen = null;
     this.socket.onmessage = null;
     this.socket.onclose = null;
   }
-  bindAllListeners() {
-    this.socket.onopen = this.onSocketOpen.bind(this);
-    this.socket.onmessage = this.onSocketMessage.bind(this);
-    this.socket.onclose = this.onSocketClose.bind(this);
-  }
-  reconnectSocket() {
+  rebindSocket() {
     this.bindAllListeners();
     this.codec.setSync(true, true);
   }

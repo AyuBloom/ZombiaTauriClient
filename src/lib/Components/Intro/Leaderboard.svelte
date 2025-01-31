@@ -1,20 +1,24 @@
 <script>
     import { fetch } from "@tauri-apps/plugin-http";
+    import { flip } from "svelte/animate";
+    import { fade, fly } from "svelte/transition";
 
+    let entries = $state(1);
     let category = $state("wave");
     let time = $state("24h");
     let mode = $state("standard");
 
     let loading = $state(true);
 
-    let topEntry = $state({});
+    let topEntries = $state({});
 
     let loadedData = {};
     $effect(async () => {
+        console.log(entries);
         if (loadedData[category]?.[time]?.[mode]) {
             const data = loadedData[category][time][mode];
 
-            topEntry = data[0];
+            topEntries = data.slice(0, entries);
             loading = false;
         } else {
             loading = true;
@@ -23,7 +27,7 @@
                 `http://zombia.io/leaderboard/data?category=${category}&time=${time}&gameMode=${mode}`,
             ).then((t) => t.json());
 
-            topEntry = data[0];
+            topEntries = data.slice(0, entries);
             loading = false;
 
             loadedData[category] ||= {};
@@ -36,11 +40,21 @@
 <div class="absolute top-4 left-4 z-40">
     <div class="text-white/50 text-sm mb-4">
         Top
+        <input
+            onkeydown={(e) => {
+                e.preventDefault();
+                return false;
+            }}
+            type="number"
+            max="10"
+            min="1"
+            bind:value={entries}
+        />
         <select bind:value={category}>
             <option value="wave">wave</option>
             <option value="score">score</option>
         </select>
-        for
+        entries for
         <select bind:value={time}>
             <option value="24h">today</option>
             <option value="7d">this week</option>
@@ -54,33 +68,39 @@
         :
     </div>
     {#if !loading}
-        <div class="text-white/50 text-sm">
-            <p>
-                {#each topEntry.players as playerName, index}
-                    {#if index != 0}
-                        <strong>&nbsp;{playerName}</strong>
+        {#each topEntries as topEntry, i (topEntry)}
+            <div
+                in:fade={{ duration: 200 }}
+                animate:flip={{ duration: 200 }}
+                class="text-white/50 text-sm mb-2"
+            >
+                <p>
+                    {#each topEntry.players as playerName, index}
+                        {#if index != 0}
+                            <strong>&nbsp;{playerName}</strong>
+                        {:else}
+                            <strong>{playerName}</strong>
+                        {/if}
+                        {#if index != topEntry.players.length - 1}
+                            -
+                        {/if}
+                    {/each}
+                </p>
+                <div class="flex flex-row">
+                    {#if category == "wave"}
+                        <p><strong>{topEntry.wave}</strong> waves</p>
                     {:else}
-                        <strong>{playerName}</strong>
+                        <p><strong>{topEntry.score.toLocaleString()}</strong> score</p>
                     {/if}
-                    {#if index != topEntry.players.length - 1}
-                        -
-                    {/if}
-                {/each}
-            </p>
-            <div class="flex flex-row">
-                {#if category == "wave"}
-                    <p><strong>{topEntry.wave}</strong> waves</p>
-                {:else}
-                    <p><strong>{topEntry.score.toLocaleString()}</strong> score</p>
-                {/if}
-                <p>
-                    &nbsp;- {new Date(topEntry.timeAchieved).toLocaleDateString()}
-                </p>
-                <p>
-                    &nbsp;- v{topEntry.version}
-                </p>
+                    <p>
+                        &nbsp;- {new Date(topEntry.timeAchieved).toLocaleDateString()}
+                    </p>
+                    <p>
+                        &nbsp;- v{topEntry.version}
+                    </p>
+                </div>
             </div>
-        </div>
+        {/each}
     {:else}
         <p class="text-white/50 text-sm">Loading...</p>
     {/if}
@@ -90,7 +110,8 @@
     @reference "tailwindcss/theme";
 
     select,
-    strong {
+    strong,
+    input {
         @apply text-white;
     }
     select {

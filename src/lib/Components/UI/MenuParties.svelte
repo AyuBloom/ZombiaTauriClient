@@ -1,7 +1,7 @@
 <script>
     let { game } = $props();
 
-    let tabs = ["Your Party", "Open Parties"];
+    let tabs = ["Your Party", "Open Parties", "Your Instances"];
     let currentTab = $state(tabs[0]);
 
     let parties = $state({});
@@ -16,7 +16,6 @@
     let isRequesting = $state(null);
 
     $effect(() => {
-        console.log($state.snapshot(partyName));
         game.network?.connected &&
             game.network.sendRpc({ name: "SetPartyName", partyName: partyName });
     });
@@ -151,36 +150,52 @@
                 ? 'disabled'
                 : ''} flex flex-row flex-wrap justify-between content-start w-full h-full transition"
         >
-            {#each Object.values(parties) as party}
-                {@const isPlayersParty = game.ui.playerTick?.partyId == party.partyId}
-                {@const isFull = party.memberCount >= party.memberLimit}
-                {#if party.isOpen === true || party.isOpen === undefined}
-                    <button
-                        onclick={() => {
-                            if (isPlayersParty) return;
-                            isRequesting = party.partyId;
-                            game.network.sendRpc({
-                                name: "JoinParty",
-                                partyId: party.partyId,
-                            });
-                        }}
-                        class="{isPlayersParty ? 'focused' : ''} {isFull
-                            ? 'disabled'
-                            : ''} flex flex-col basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
-                    >
-                        <strong>{party.partyName}</strong>
-                        <span class="opacity-70"
-                            >{party.memberCount}/{party.memberLimit}</span
+            {#if Object.keys(parties).length > 1 || currentParty.isOpen}
+                {#each Object.values(parties) as party}
+                    {@const isPlayersParty = game.ui.playerTick?.partyId == party.partyId}
+                    {@const isFull = party.memberCount >= party.memberLimit}
+                    {#if party.isOpen === true || party.isOpen === undefined}
+                        <button
+                            onclick={() => {
+                                if (isPlayersParty) return;
+                                isRequesting = party.partyId;
+                                game.network.sendRpc({
+                                    name: "JoinParty",
+                                    partyId: party.partyId,
+                                });
+                            }}
+                            class="{isPlayersParty ? 'focused' : ''} {isFull
+                                ? 'disabled'
+                                : ''} flex flex-col basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
                         >
-                    </button>
-                {/if}
-            {/each}
+                            <strong>{party.partyName}</strong>
+                            <span class="opacity-70"
+                                >{party.memberCount}/{party.memberLimit}</span
+                            >
+                        </button>
+                    {/if}
+                {/each}
+            {:else if !currentParty.isOpen}
+                <p
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70"
+                >
+                    No open parties
+                </p>
+            {/if}
         </div>
     {/if}
 {/snippet}
 
 {#snippet AltManagement()}
-    <div class="flex flex-col w-full p-2"></div>
+    {#if currentTab == "Your Instances"}
+        <div class="flex flex-col w-full p-2">
+            <p
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70"
+            >
+                Coming soon...
+            </p>
+        </div>
+    {/if}
 {/snippet}
 
 {#snippet PartyManagement()}

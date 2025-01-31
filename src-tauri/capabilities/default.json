@@ -6,6 +6,8 @@
   "permissions": [
     "core:default",
     "opener:default",
+    "svelte:default",
+    "core:event:default",
     "core:webview:allow-set-webview-zoom",
     {
       "identifier": "http:default",
