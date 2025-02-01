@@ -188,13 +188,13 @@ export default class {
         event: t,
       });
     }
-    // 0 == dr.ui.castingSpell &&
-    this.sendInputPacket(
-      {
-        mouseDown: true,
-      },
-      t,
-    );
+    false == this.game.ui.castingSpell &&
+      this.sendInputPacket(
+        {
+          mouseDown: true,
+        },
+        t,
+      );
     this.mouseDown = true;
     this.game.eventEmitter.emit("mouseDown", {
       event: t,
@@ -206,13 +206,13 @@ export default class {
         this.rightMouseDown = false;
         return void this.game.eventEmitter.emit("rightMouseUp", t);
       }
-      // 0 == dr.ui.castingSpell &&
-      this.sendInputPacket(
-        {
-          mouseDown: false,
-        },
-        t,
-      );
+      false == this.game.ui.castingSpell &&
+        this.sendInputPacket(
+          {
+            mouseDown: false,
+          },
+          t,
+        );
       this.mouseDown = false;
       this.game.eventEmitter.emit("mouseUp", {
         event: t,

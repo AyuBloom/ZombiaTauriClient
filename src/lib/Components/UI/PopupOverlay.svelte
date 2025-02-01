@@ -17,7 +17,6 @@
         if (game.ui.popup === undefined && game.ui.pendingPopups[0] !== undefined) {
             game.ui.popup = game.ui.pendingPopups.shift();
         }
-        console.log($state.snapshot(game.ui.popup));
     });
 
     $effect(() => {

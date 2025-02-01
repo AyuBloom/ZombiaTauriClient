@@ -86,6 +86,7 @@ export default class {
         });
         return;
       }
+      if (this.outOfSync) return;
       console.log(`Resyncing socket! Decoding ${this.packetArr.length} packets...`);
       for (; this.packetArr.length > 0; ) {
         this.game.network.handleEntityUpdate(this.decode(this.packetArr[0]));

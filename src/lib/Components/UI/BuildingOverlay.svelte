@@ -5,7 +5,7 @@
     import { fade } from "svelte/transition";
 
     let { game } = $props();
-    import { gameOptions } from "../Intro/Intro-shared.svelte";
+    import { gameOptions } from "$lib/Engine/shared.svelte.js";
 
     let buildingData = $derived(game.ui.buildingData);
     let buildings = $derived(game.ui.buildings);

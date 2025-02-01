@@ -18,7 +18,17 @@
     import AnnouncementOverlay from "./AnnouncementOverlay.svelte";
     import PopupOverlay from "./PopupOverlay.svelte";
 
+    import { gameSettings } from "$lib/Engine/shared.svelte";
+
     let { game } = $props();
+
+    gameSettings.start();
+
+    window.gameSettings = gameSettings;
+
+    $effect(() => {
+        gameSettings.state && gameSettings.save();
+    });
 </script>
 
 <div class="hud fixed w-screen h-screen z-20">

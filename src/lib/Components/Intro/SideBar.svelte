@@ -1,6 +1,6 @@
 <script>
     import servers from "$lib/Assets/servers.json";
-    import { gameOptions, psk } from "./Intro-shared.svelte.js";
+    import { gameOptions, psk } from "$lib/Engine/shared.svelte.js";
 
     const descriptionForModes = {
         standard:
@@ -45,6 +45,7 @@
     <div class="hud-intro-main">
         <h2>Game Options</h2>
         <input
+            type="text"
             class="hud-intro-name"
             placeholder="Player name..."
             bind:value={gameOptions.state.playerName}
@@ -65,6 +66,7 @@
             {/each}
         </select>
         <input
+            type="text"
             class="hud-intro-invite"
             placeholder="Invite link..."
             bind:value={psk.value}
@@ -72,6 +74,16 @@
     </div>
     <div class="hud-intro-settings">
         <h2>Settings</h2>
+        {#each Object.keys(gameOptions.state.needsRestart) as setting}
+            <div class="relative first:-mt-2">
+                <input
+                    type="checkbox"
+                    onchange={location.reload()}
+                    bind:checked={gameOptions.state.needsRestart[setting]}
+                />
+                <span class="text-white ml-1 text-xs">{setting}</span>
+            </div>
+        {/each}
     </div>
 </div>
 
@@ -84,7 +96,7 @@
     h2 {
         @apply first:mb-4 relative text-xl font-bold text-white after:absolute after:-bottom-1 after:left-0 after:border after:border-white/30 after:w-12;
     }
-    input,
+    input[type="text"],
     select {
         @apply w-full h-10 appearance-none mb-2 p-2 text-white text-xs bg-black/30 rounded-sm placeholder:text-white/30;
     }

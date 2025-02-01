@@ -1,6 +1,6 @@
 <script>
     let { game } = $props();
-    import { gameOptions } from "../Intro/Intro-shared.svelte";
+    import { gameOptions } from "$lib/Engine/shared.svelte.js";
 
     import { innerWidth } from "svelte/reactivity/window";
 

@@ -3,7 +3,7 @@
     import Footer from "./Footer.svelte";
     import Leaderboard from "./Leaderboard.svelte";
 
-    import { gameOptions, psk } from "./Intro-shared.svelte.js";
+    import { gameOptions, psk } from "$lib/Engine/shared.svelte.js";
     import servers from "$lib/Assets/servers.json";
 
     const { game } = $props();
@@ -28,6 +28,7 @@
         e.allowed && (inGame = true);
     });
 
+    window.gameOptions = gameOptions;
     gameOptions.start();
     $effect(() => {
         gameOptions.state && gameOptions.save();

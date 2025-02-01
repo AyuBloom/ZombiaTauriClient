@@ -1,5 +1,6 @@
 export default class {
   actuallyIsMobile = $state(false);
+
   constructor(game) {
     this.game = game;
   }

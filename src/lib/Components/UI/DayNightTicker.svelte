@@ -1,6 +1,6 @@
 <script>
     let { game } = $props();
-    import { gameOptions } from "$lib/Components/Intro/Intro-shared.svelte.js";
+    import { gameOptions } from "$lib/Engine/shared.svelte.js";
 
     let TICKER_WIDTH = 130;
 

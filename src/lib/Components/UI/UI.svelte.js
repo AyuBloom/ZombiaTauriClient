@@ -22,7 +22,11 @@ export default class {
   playerPartyCanPlace = $state(false);
 
   isDisplayingMenu = $state(null);
+
+  castingSpell = $state(false);
+
   announcement = $state(null);
+
   popup = $state(undefined);
   pendingPopups = $state([]);
 

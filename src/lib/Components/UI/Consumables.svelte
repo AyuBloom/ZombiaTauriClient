@@ -7,13 +7,12 @@
         ...Object.values(game.ui.toolData || {}).filter((e) => e.class == "Potion"),
     ]);
     const isDisabled = $state({});
-    let castingSpell = $state(false);
 
     let spellIndicatorModel;
 
     function startCasting(spell) {
-        if (1 != castingSpell) {
-            castingSpell = spell;
+        if (1 != game.ui.castingSpell) {
+            game.ui.castingSpell = spell;
 
             spellIndicatorModel = new GraphicsNode(game);
             spellIndicatorModel.setAlpha(0.1);
@@ -40,8 +39,8 @@
         }
     }
     function stopCasting() {
-        if (castingSpell) {
-            castingSpell = false;
+        if (game.ui.castingSpell) {
+            game.ui.castingSpell = false;
             spellIndicatorModel.clear();
             spellIndicatorModel.setVisible(false);
             game.renderer.uiLayer.removeAttachment(spellIndicatorModel);
@@ -50,7 +49,7 @@
         }
     }
     function updateSpellIndicator() {
-        if (null == spellIndicatorModel || !castingSpell) return;
+        if (null == spellIndicatorModel || !game.ui.castingSpell) return;
 
         const t = game.ui.mousePosition,
             e = game.renderer.screenToWorld(t.x, t.y),
@@ -59,12 +58,12 @@
     }
 
     function onMouseUp(t) {
-        if (castingSpell) {
+        if (game.ui.castingSpell) {
             const t = game.ui.mousePosition,
                 e = game.renderer.screenToWorld(t.x, t.y);
             game.network.sendRpc({
                 name: "CastSpell",
-                spellName: castingSpell,
+                spellName: game.ui.castingSpell,
                 x: Math.floor(e.x),
                 y: Math.floor(e.y),
             });

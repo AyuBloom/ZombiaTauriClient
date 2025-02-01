@@ -1,7 +1,7 @@
 <script>
     import { fetch } from "@tauri-apps/plugin-http";
     import { flip } from "svelte/animate";
-    import { fade, fly } from "svelte/transition";
+    import { fade } from "svelte/transition";
 
     let entries = $state(1);
     let category = $state("wave");
@@ -14,7 +14,6 @@
 
     let loadedData = {};
     $effect(async () => {
-        console.log(entries);
         if (loadedData[category]?.[time]?.[mode]) {
             const data = loadedData[category][time][mode];
 
