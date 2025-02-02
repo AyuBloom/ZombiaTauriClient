@@ -1,5 +1,8 @@
 <script>
+    import tippy from "tippy.js";
+
     let { game } = $props();
+
     const menus = [
         {
             name: "Shop",
@@ -14,11 +17,26 @@
             keybind: null,
         },
     ];
+
+    function tooltip(node, fn) {
+        $effect(() => {
+            const tooltip = tippy(node, fn());
+
+            return tooltip.destroy;
+        });
+    }
 </script>
 
 <div class="absolute flex flex-row right-[18.25rem] top-1">
     {#each menus as { name, keybind }}
         <button
+            use:tooltip={() => {
+                return {
+                    content: `<strong>${name}</strong>`,
+                    allowHTML: true,
+                    animation: false,
+                };
+            }}
             onclick={() => game.ui.showMenu(name)}
             class="relative w-10 h-10 p-2 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:shadow-sm"
         >

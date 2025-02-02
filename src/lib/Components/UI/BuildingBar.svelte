@@ -1,4 +1,6 @@
 <script>
+    import tippy from "tippy.js";
+
     let { game } = $props();
 
     let buildings = $state([]);
@@ -27,6 +29,14 @@
             });
         }
     });
+
+    function tooltip(node, fn) {
+        $effect(() => {
+            const tooltip = tippy(node, fn());
+
+            return tooltip.destroy;
+        });
+    }
 </script>
 
 <div
@@ -40,6 +50,13 @@
                     ? 'disabled'
                     : ''} relative min-w-12 w-12 h-12 p-1 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
                 onclick={() => game.ui.PlacementOverlay.startPlacing(tower)}
+                use:tooltip={() => {
+                    return {
+                        content: `<strong>${tower.split(/(?=[A-Z])/).join(" ")}</strong><span>${game.ui.buildingData[tower].built}/${game.ui.buildingData[tower].limit}</span>`,
+                        allowHTML: true,
+                        animation: false,
+                    };
+                }}
             >
                 <img
                     class="w-10 h-10"

@@ -1,7 +1,18 @@
 <script>
+    import tippy from "tippy.js";
+
     import GraphicsNode from "$lib/Models/GraphicsNode";
 
     let { game } = $props();
+
+    function tooltip(node, fn) {
+        $effect(() => {
+            const tooltip = tippy(node, fn());
+
+            return tooltip.destroy;
+        });
+    }
+
     const consumablesData = $derived([
         ...Object.values(game.ui.spellData || {}),
         ...Object.values(game.ui.toolData || {}).filter((e) => e.class == "Potion"),
@@ -115,6 +126,13 @@
                             });
                         }
                     }
+                }}
+                use:tooltip={() => {
+                    return {
+                        content: `<strong>${consumable.name.split(/(?=[A-Z])/).join(" ")}</strong>`,
+                        allowHTML: true,
+                        animation: false,
+                    };
                 }}
                 class="relative w-10 h-10 p-1 m-1 transition"
             >
