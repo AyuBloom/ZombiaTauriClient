@@ -14,7 +14,11 @@ Why? Because I can. <br>
 ## Installation
 Follow the prerequisites page for building Tauri ([here](https://v2.tauri.app/start/prerequisites/)).
 (If any problems arise, please make an issue) <br>
-Afterwards, you can do the following to run the application in dev mode:
+Afterwards, install npm dependencies:
+```sh
+npm i
+```
+Then, you can do the following to run the application in dev mode:
 ```sh
 npm run tauri dev
 ```
