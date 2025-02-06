@@ -22,8 +22,19 @@
         "Max Drone Count": "maxDrones",
     };
 
+    let isInit = false;
+    let maxFactoryDistance = $state(0);
+
     let shiftDown = $state(false);
+
     let shouldDisplay = $state(false);
+
+    let draw, harvesterSelectorModel;
+    let shouldUpdateRanges = $state(true);
+    let displayingHarvesterRange = $state(false);
+    let numberOfRangesToDraw = $state(0);
+    let lastRangeDrawTick = $state(0);
+
     let alignTop = $state(-999);
     let alignLeft = $state(-999);
     let overlay = $state();
@@ -59,9 +70,7 @@
             if (game.renderer.world.entities[buildingUid]) {
                 buildingId = buildings[t].type;
                 buildingTier = buildings[t].tier;
-                // this.shouldUpdateRanges = true;
-                // this.updateText();
-                // this.show();
+                shouldUpdateRanges = true;
                 update();
                 shouldDisplay = true;
             } else {
@@ -72,13 +81,15 @@
 
     function stopWatching() {
         if (buildingUid) {
-            // harvesterSelectorModel.setVisible(false);
-            // draw.clear();
+            harvesterSelectorModel.setVisible(false);
+            draw.clear();
+
             buildingUid = null;
             buildingId = null;
             buildingTier = null;
 
-            // displayingHarvesterRange = false;
+            displayingHarvesterRange = false;
+
             shouldDisplay = false;
             alignTop = -999;
             alignLeft = -999;
@@ -109,18 +120,20 @@
                 buildingTier >= t.tiers ||
                 ("Factory" !== buildingId && buildingTier >= game.ui.factory.tier);
         }
-        /*
         if (
             1 == shouldUpdateRanges &&
             lastRangeDrawTick !== game.renderer.replicator.currentTick.tick
         ) {
+            numberOfRangesToDraw = 0;
             shouldUpdateRanges = false;
             lastRangeDrawTick = game.renderer.replicator.currentTick.tick;
             draw.clear();
-            numberOfRangesToDraw = 0;
+
             if ("Harvester" == r.name) {
+                /*
                 harvesterSetTargetElem.innerHTML =
                     0 == t.targetTick.targetResourceUid ? "Set Target" : "Clear Target";
+                */
                 const e = r.harvestRange[n.tier - 1];
                 draw.drawCircle(
                     n.x,
@@ -178,21 +191,59 @@
                         }
                     }
                 }
-            } else if (
-                (harvesterSelectorModel.setVisible(false),
-                drawRange(buildingUid),
-                game.network.inputPacketManager.shiftDown)
-            )
-                for (let t in game.ui.buildings) {
-                    if (
-                        game.ui.buildings[t].type == buildingId &&
-                        game.ui.buildings[t].uid !== buildingUid
-                    ) {
-                        drawRange(t);
+            } else {
+                harvesterSelectorModel.setVisible(false);
+                drawRange(buildingUid);
+                if (game.inputPacketManager.shiftDown) {
+                    for (let t in game.ui.buildings) {
+                        if (
+                            game.ui.buildings[t].type == buildingId &&
+                            game.ui.buildings[t].uid !== buildingUid
+                        ) {
+                            drawRange(t);
+                        }
                     }
                 }
+            }
         }
-        */
+    }
+
+    function onWorldMouseUp(t) {
+        if ("Harvester" != buildingId) return stopWatching();
+        if (0 == displayingHarvesterRange) return stopWatching();
+
+        const e = game.renderer.world.entities[buildingUid],
+            r = buildingData[buildingId].harvestRange[buildings[buildingUid].tier - 1],
+            n = game.renderer.scenery,
+            i = [],
+            o = game.renderer.screenToWorld(
+                game.ui.mousePosition.x,
+                game.ui.mousePosition.y,
+            );
+        for (const t of n.attachments) {
+            if ("Resource" == t.entityClass) {
+                const n = Math.sqrt(game.util.measureDistance(t.getPosition(), o)),
+                    s =
+                        Math.sqrt(
+                            game.util.measureDistance(t.getPosition(), e.getPosition()),
+                        ) + t.targetTick.radius;
+                n <= 120 && s <= r && i.push(t);
+            }
+        }
+        if (0 != i.length) {
+            i.sort((t, e) => {
+                const r = game.util.measureDistance(o, t.getPosition()),
+                    n = game.util.measureDistance(o, e.getPosition());
+                return r < n ? -1 : r > n ? 1 : 0;
+            });
+            game.network.sendRpc({
+                name: "UpdateHarvesterTarget",
+                harvesterUid: buildingUid,
+                targetUid: i[0].uid,
+            });
+            show();
+            displayingHarvesterRange = false;
+        }
     }
 
     function upgradeBuilding(t) {
@@ -249,6 +300,29 @@
         }
     }
 
+    game.eventEmitter.on("EnterWorldResponse", (t) => {
+        stopWatching();
+        maxFactoryDistance = t.maxFactoryBuildDistance;
+
+        if (isInit) return;
+        isInit = true;
+
+        harvesterSelectorModel = new HarvesterSelectorModel(game, {
+            radius: 120,
+        });
+
+        game.renderer.groundLayer.addAttachment(harvesterSelectorModel, 10);
+        harvesterSelectorModel.setVisible(false);
+
+        draw = new GraphicsNode(game);
+        game.renderer.groundLayer.addAttachment(draw, 10);
+
+        numberOfRangesToDraw = 0;
+        shouldUpdateRanges = true;
+        lastRangeDrawTick = 0;
+        draw.setAlpha(0.1);
+    });
+
     game.eventEmitter.on("mouseUp", () => {
         if (game.ui.PlacementOverlay.isActive()) return;
         const e = game.renderer.world,
@@ -268,18 +342,18 @@
         for (const r in o) {
             const n = parseInt(r);
 
-            // if (n == buildingUid) return s.onWorldMouseUp(t);
+            if (n == buildingUid) return s.onWorldMouseUp(t);
 
             const i = e.entities[n].getTargetTick();
             for (const e in buildingData) {
                 if (e == i.model) {
-                    // s.onWorldMouseUp(t);
+                    s.onWorldMouseUp(t);
                     return startWatching(n);
                 }
             }
         }
         "Harvester" != buildingId && stopWatching();
-        // s.onWorldMouseUp(t);
+        s.onWorldMouseUp(t);
     });
 
     game.eventEmitter.on("EntityUpdate", (t) => {
@@ -289,11 +363,11 @@
     });
 
     game.eventEmitter.on("CameraUpdate", () => {
-        // shouldUpdateRanges = true;
+        shouldUpdateRanges = true;
         update();
     });
     game.eventEmitter.on("BuildingsUpdated", () => {
-        // shouldUpdateRanges = true;
+        shouldUpdateRanges = true;
         update();
     });
 
@@ -302,7 +376,7 @@
     game.eventEmitter.on("84Up", sellBuilding);
 
     const t = (t) => {
-        // shouldUpdateRanges = true;
+        shouldUpdateRanges = true;
         if ("Up" == t && 1 == shiftDown) {
             shiftDown = false;
             update();
@@ -360,7 +434,12 @@
         {#if buildingId == "Harvester"}
             <div class="flex flex-row w-full gap-1">
                 <button class="flex-1 bg-accent-purple">Buy Drone</button>
-                <button class="flex-1 bg-accent-gold">Set Target</button>
+                <button class="flex-1 bg-accent-gold"
+                    >{0 ==
+                    game.renderer.world.entities[buildingUid].targetTick.targetResourceUid
+                        ? "Set"
+                        : "Clear"} Target</button
+                >
             </div>
         {/if}
         <div class="flex flex-col w-full gap-1">
