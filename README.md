@@ -12,6 +12,9 @@ Why? Because I can. <br>
 </div>
 
 ## Installation
+Go to releases for the installers! Note that your browser might flag the download. For Windows, that is because it is a unsigned .exe file. 
+
+## Building
 Follow the prerequisites page for building Tauri ([here](https://v2.tauri.app/start/prerequisites/)).
 (If any problems arise, please make an issue) <br>
 Afterwards, install npm dependencies:
