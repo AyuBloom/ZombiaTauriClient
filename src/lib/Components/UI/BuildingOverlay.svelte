@@ -2,8 +2,6 @@
     import GraphicsNode from "$lib/Models/GraphicsNode";
     import HarvesterSelectorModel from "$lib/Models/HarvesterSelectorModel";
 
-    import { fade } from "svelte/transition";
-
     let { game } = $props();
     import { gameOptions } from "$lib/Engine/shared.svelte.js";
 
@@ -93,6 +91,144 @@
             shouldDisplay = false;
             alignTop = -999;
             alignLeft = -999;
+        }
+    }
+
+    function drawRange(t) {
+        const e = buildings[t],
+            r = game.renderer.world.entities[t];
+        if ((numberOfRangesToDraw++, null == e || null == r)) return;
+        const n = buildingData[e.type];
+        if ("Factory" == e.type) {
+            const t = game.renderer.world.entityGrid.cellSize;
+            draw.drawRect(
+                e.x - maxFactoryDistance * t,
+                e.y - maxFactoryDistance * t,
+                e.x + maxFactoryDistance * t,
+                e.y + maxFactoryDistance * t,
+                {
+                    r: 0,
+                    b: 0,
+                    g: 0,
+                },
+                {
+                    r: 255,
+                    b: 0,
+                    g: 0,
+                },
+                12,
+            );
+        } else if (void 0 !== n.towerRadius)
+            draw.drawCircle(
+                e.x,
+                e.y,
+                n.towerRadius[e.tier - 1],
+                1 == numberOfRangesToDraw
+                    ? {
+                          r: 200,
+                          g: 160,
+                          b: 0,
+                      }
+                    : {
+                          r: 0,
+                          g: 0,
+                          b: 0,
+                          a: 0,
+                      },
+                {
+                    r: 255,
+                    g: 200,
+                    b: 0,
+                },
+                8,
+            );
+        else if (void 0 !== n.range && "SawTower" == e.type) {
+            let t, r;
+            0 == e.yaw
+                ? ((t = {
+                      x: e.x - n.maxYawDeviation[e.tier - 1],
+                      y: e.y - n.range[e.tier - 1],
+                  }),
+                  (r = {
+                      x: e.x + n.maxYawDeviation[e.tier - 1],
+                      y: e.y - n.range[e.tier - 1],
+                  }))
+                : 90 == e.yaw
+                  ? ((t = {
+                        x: e.x + n.range[e.tier - 1],
+                        y: e.y + n.maxYawDeviation[e.tier - 1],
+                    }),
+                    (r = {
+                        x: e.x + n.range[e.tier - 1],
+                        y: e.y - n.maxYawDeviation[e.tier - 1],
+                    }))
+                  : 180 == e.yaw
+                    ? ((t = {
+                          x: e.x + n.maxYawDeviation[e.tier - 1],
+                          y: e.y + n.range[e.tier - 1],
+                      }),
+                      (r = {
+                          x: e.x - n.maxYawDeviation[e.tier - 1],
+                          y: e.y + n.range[e.tier - 1],
+                      }))
+                    : 270 == e.yaw &&
+                      ((t = {
+                          x: e.x - n.range[e.tier - 1],
+                          y: e.y - n.maxYawDeviation[e.tier - 1],
+                      }),
+                      (r = {
+                          x: e.x - n.range[e.tier - 1],
+                          y: e.y + n.maxYawDeviation[e.tier - 1],
+                      })),
+                draw.drawTriangle(
+                    {
+                        x: e.x,
+                        y: e.y,
+                    },
+                    t,
+                    r,
+                    {
+                        r: 200,
+                        g: 160,
+                        b: 0,
+                    },
+                    {
+                        r: 255,
+                        g: 200,
+                        b: 0,
+                    },
+                    8,
+                );
+        }
+    }
+
+    function toggleHarvesterTargetDisplay(t) {
+        t.stopPropagation();
+        if (1 === t.which) {
+            if (
+                0 ==
+                game.renderer.world.entities[buildingUid].targetTick.targetResourceUid
+            ) {
+                displayingHarvesterRange = true;
+                shouldDisplay = false;
+            } else {
+                game.network.sendRpc({
+                    name: "UpdateHarvesterTarget",
+                    harvesterUid: buildingUid,
+                    targetUid: 0,
+                });
+            }
+            shouldUpdateRanges = true;
+            update();
+        }
+    }
+    function purchaseHarvesterDrone(t) {
+        if (1 === t.which) {
+            t.stopPropagation();
+            game.network.sendRpc({
+                name: "BuyHarvesterDrone",
+                harvesterUid: buildingUid,
+            });
         }
     }
 
@@ -241,7 +377,7 @@
                 harvesterUid: buildingUid,
                 targetUid: i[0].uid,
             });
-            show();
+            shouldDisplay = true;
             displayingHarvesterRange = false;
         }
     }
@@ -323,7 +459,7 @@
         draw.setAlpha(0.1);
     });
 
-    game.eventEmitter.on("mouseUp", () => {
+    game.eventEmitter.on("mouseUp", (t) => {
         if (game.ui.PlacementOverlay.isActive()) return;
         const e = game.renderer.world,
             r = game.renderer.screenToWorld(
@@ -342,18 +478,17 @@
         for (const r in o) {
             const n = parseInt(r);
 
-            if (n == buildingUid) return s.onWorldMouseUp(t);
+            if (n == buildingUid) return onWorldMouseUp(t);
 
             const i = e.entities[n].getTargetTick();
             for (const e in buildingData) {
                 if (e == i.model) {
-                    s.onWorldMouseUp(t);
+                    onWorldMouseUp(t);
                     return startWatching(n);
                 }
             }
         }
-        "Harvester" != buildingId && stopWatching();
-        s.onWorldMouseUp(t);
+        onWorldMouseUp(t);
     });
 
     game.eventEmitter.on("EntityUpdate", (t) => {
@@ -433,8 +568,21 @@
         {/if}
         {#if buildingId == "Harvester"}
             <div class="flex flex-row w-full gap-1">
-                <button class="flex-1 bg-accent-purple">Buy Drone</button>
-                <button class="flex-1 bg-accent-gold"
+                <button
+                    onclick={(t) => purchaseHarvesterDrone(t)}
+                    class="flex-1 bg-accent-purple"
+                    >Buy Drone ({@html game.util.createResourceCostString(
+                        {
+                            goldCosts: buildingData[buildingId].droneGoldCosts,
+                        },
+                        buildingTier,
+                        1,
+                        true,
+                    ).elem})</button
+                >
+                <button
+                    onclick={(t) => toggleHarvesterTargetDisplay(t)}
+                    class="flex-1 bg-accent-gold"
                     >{0 ==
                     game.renderer.world.entities[buildingUid].targetTick.targetResourceUid
                         ? "Set"
@@ -474,7 +622,7 @@
         class="parent absolute w-90 bg-black/30 rounded-sm p-4 z-40"
         bind:this={overlay}
         onmouseup={(t) => {
-            "Harvester" != buildingId && t.stopPropagation();
+            t.stopPropagation();
         }}
         onmousedown={(t) => {
             t.stopPropagation();
@@ -483,7 +631,10 @@
         <h2>{buildings[buildingUid]?.type.split(/(?=[A-Z])/).join(" ")}</h2>
         {#if buildingId == "Harvester"}
             <h3 class="absolute top-4 right-4">
-                {droneCount}/{buildingData?.[buildingId]?.maxDrones?.[buildingTier - 1]} Drones
+                {game.renderer.world.entities[buildingUid].targetTick
+                    .droneCount}/{buildingData?.[buildingId]?.maxDrones?.[
+                    buildingTier - 1
+                ]} Drones
             </h3>
         {/if}
         <h3>Tier <strong>{buildingTier}</strong></h3>

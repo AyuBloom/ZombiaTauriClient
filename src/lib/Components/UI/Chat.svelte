@@ -37,22 +37,18 @@
     game.eventEmitter.on("27Up", () => {
         1 == isTyping && (isTyping = false);
     });
+    /*
     game.eventEmitter.on("mouseDown", () => {
         1 == isTyping && (isTyping = false);
     });
+    */
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <div
-    onmouseup={(t) => {
-        t.stopPropagation();
-    }}
-    onmousedown={(t) => {
-        t.stopPropagation();
-    }}
     class="{isTyping
         ? 'focused'
-        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition pointer-events-none"
+        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition pointer-events-none z-999"
 >
     <div class="min-w-78 w-78 h-48 overflow-x-hidden overflow-y-auto" bind:this={chatBox}>
         {#each msgs as { channel, message, name, date }}
@@ -70,9 +66,15 @@
         {/each}
     </div>
     <div
+        onmouseup={(t) => {
+            t.stopPropagation();
+        }}
+        onmousedown={(t) => {
+            t.stopPropagation();
+        }}
         class="{isTyping
             ? 'block'
-            : 'hidden'} flex flex-row absolute -ml-2 bottom-0 h-10 w-full border-t-2 border-white/20"
+            : 'hidden'} flex flex-row absolute -ml-2 bottom-0 h-10 w-full border-t-2 border-white/20 z-999"
     >
         <input
             class="relative basis-7/8 pl-2 pr-2 text-xs"

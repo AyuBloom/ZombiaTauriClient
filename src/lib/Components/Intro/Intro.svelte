@@ -5,6 +5,7 @@
 
     import { gameOptions, psk } from "$lib/Engine/shared.svelte.js";
     import servers from "$lib/Assets/servers.json";
+    import { fade } from "svelte/transition";
 
     const { game } = $props();
     let inGame = $state(false);
@@ -36,7 +37,7 @@
 </script>
 
 {#if !inGame}
-    <div class="hud-intro flex w-screen h-screen z-30">
+    <div out:fade class="hud-intro flex w-screen h-screen z-30">
         <SideBar />
         <div class="relative w-screen text-xl text-white">
             <button
