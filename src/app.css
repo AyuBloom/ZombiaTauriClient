@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Hammersmith+One&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -30,7 +31,7 @@
     font-family: "Hammersmith One";
     font-style: normal;
     font-weight: 400;
-    src: url("./HammersmithOne.ttf") format("truetype");
+    /* src: url("./HammersmithOne.ttf") format("truetype"); */
     /* unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; */
 }
 
@@ -40,5 +41,5 @@ h2 {
 }
 
 canvas {
-    @apply fixed block w-full h-full m-0 p-0;
+    @apply absolute block w-screen h-screen top-0 left-0 m-0 p-0;
 }

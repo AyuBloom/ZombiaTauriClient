@@ -1,7 +1,7 @@
 [package]
 name = "zombia-client"
-version = "0.1.0"
-description = "A Tauri App"
+version = "0.3.0"
+description = "Play zombia.io as an app, on macOS, Windows and Linux (with mobile support hopefully coming)"
 authors = ["you"]
 edition = "2021"
 

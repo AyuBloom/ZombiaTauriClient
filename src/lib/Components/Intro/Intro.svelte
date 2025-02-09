@@ -29,6 +29,18 @@
         e.allowed && (inGame = true);
     });
 
+    /* will try this when... i have time
+    game.eventEmitter.once("EntityUpdate", ({ entities }) => {
+        for (let uid in entities) {
+            const entity = entities[uid];
+            if (entity === true) continue;
+
+            const { x, y } = game.renderer.worldToUi(entity.position);
+
+        }
+    });
+    */
+
     window.gameOptions = gameOptions;
     gameOptions.start();
     $effect(() => {
@@ -37,7 +49,7 @@
 </script>
 
 {#if !inGame}
-    <div out:fade class="hud-intro flex w-screen h-screen z-30">
+    <div out:fade={{ delay: 100 }} class="hud-intro absolute flex w-screen h-screen z-50">
         <SideBar />
         <div class="relative w-screen text-xl text-white">
             <button
