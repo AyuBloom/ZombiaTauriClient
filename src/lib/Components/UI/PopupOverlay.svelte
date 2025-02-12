@@ -66,8 +66,15 @@
         </p>
     {/each}
 
+    <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
     {#each confirmations as confirmation}
         <div
+            onmouseup={(t) => {
+                t.stopPropagation();
+            }}
+            onmousedown={(t) => {
+                t.stopPropagation();
+            }}
             transition:fade={{ duration: 200 }}
             class="absolute w-full h-full backdrop-blur-xs z-50"
         >

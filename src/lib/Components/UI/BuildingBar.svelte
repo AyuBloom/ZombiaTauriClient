@@ -5,28 +5,19 @@
 
     let buildings = $state([]);
 
-    const TOWER_KEYBINDS = {
-        Wall: "1",
-        Door: "2",
-        LightningTower: "3",
-        ArrowTower: "4",
-        CannonTower: "5",
-        SawTower: "6",
-        RocketTower: "7",
-        MageTower: "8",
-        Drill: "9",
-        Harvester: "0",
-    };
-
     game.eventEmitter.on("BuildingDataReceived", () => {
         const t = game.ui.buildingData;
         buildings = [];
         for (const buildingData of Object.values(t)) {
-            buildings.push({
-                tower: buildingData.name,
-                tier: 1, // buildingData.tier,
-                keybind: TOWER_KEYBINDS[buildingData.name],
-            });
+            buildings.push(buildingData.name);
+            if (void 0 !== buildingData.hotkey) {
+                game.eventEmitter.on(
+                    `${buildingData.hotkey.toString().charCodeAt(0)}Up`,
+                    () => {
+                        game.ui.PlacementOverlay.startPlacing(buildingData.name);
+                    },
+                );
+            }
         }
     });
 
@@ -43,7 +34,7 @@
     style="scrollbar-width: none;"
     class="fixed flex flex-row left-1 bottom-1 w-screen overflow-x-auto scroll-p"
 >
-    {#each buildings as { tower, tier, keybind }}
+    {#each buildings as tower}
         {#if tower !== "Factory" || game.ui.factory === null}
             <button
                 class="{tower !== 'Factory' && game.ui.factory === null
@@ -61,10 +52,10 @@
                 <img
                     class="w-10 h-10"
                     alt={tower}
-                    src="/images/Ui/Buildings/{tower}/{tower}Tier{tier}.svg"
+                    src="/images/Ui/Buildings/{tower}/{tower}Tier1.svg"
                 />
                 <span class="absolute bottom-0 right-1 font-bold text-xs text-white/70"
-                    >{keybind}</span
+                    >{game.ui.buildingData[tower].hotkey}</span
                 >
             </button>
         {/if}

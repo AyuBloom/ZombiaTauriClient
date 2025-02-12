@@ -10,10 +10,11 @@
 
     let loading = $state(true);
 
-    let topEntries = $state({});
+    let topEntries = $state([]);
 
     let loadedData = {};
     $effect(async () => {
+        entries;
         if (loadedData[category]?.[time]?.[mode]) {
             const data = loadedData[category][time][mode];
 
@@ -34,6 +35,13 @@
             loadedData[category][time][mode] = data;
         }
     });
+
+    /*
+    $effect(() => {
+        console.log(topEntries.length + 1);
+        if (entries > topEntries.length + 1) entries = topEntries.length + 1;
+    });
+    */
 </script>
 
 <div class="absolute top-4 left-4 z-40">
@@ -66,43 +74,47 @@
         </select>
         :
     </div>
-    {#if !loading}
-        {#each topEntries as topEntry, i (topEntry)}
-            <div
-                in:fade={{ duration: 200 }}
-                animate:flip={{ duration: 200 }}
-                class="text-white/50 text-sm mb-2"
-            >
-                <p>
-                    {#each topEntry.players as playerName, index}
-                        {#if index != 0}
-                            <strong>&nbsp;{playerName}</strong>
+    <div class="flex flex-col flex-wrap h-[35vh]">
+        {#if !loading}
+            {#each topEntries as topEntry, i (topEntry)}
+                <div
+                    in:fade={{ duration: 200 }}
+                    animate:flip={{ duration: 200 }}
+                    class="text-white/50 text-sm mb-2 mr-2 w-4/10 overflow-x-hidden"
+                >
+                    <p>
+                        {#each topEntry.players as playerName, index}
+                            {#if index != 0}
+                                <strong>&nbsp;{playerName}</strong>
+                            {:else}
+                                <strong>{playerName}</strong>
+                            {/if}
+                            {#if index != topEntry.players.length - 1}
+                                -
+                            {/if}
+                        {/each}
+                    </p>
+                    <div class="flex flex-row">
+                        {#if category == "wave"}
+                            <p><strong>{topEntry.wave}</strong> waves</p>
                         {:else}
-                            <strong>{playerName}</strong>
+                            <p>
+                                <strong>{topEntry.score.toLocaleString()}</strong> score
+                            </p>
                         {/if}
-                        {#if index != topEntry.players.length - 1}
-                            -
-                        {/if}
-                    {/each}
-                </p>
-                <div class="flex flex-row">
-                    {#if category == "wave"}
-                        <p><strong>{topEntry.wave}</strong> waves</p>
-                    {:else}
-                        <p><strong>{topEntry.score.toLocaleString()}</strong> score</p>
-                    {/if}
-                    <p>
-                        &nbsp;- {new Date(topEntry.timeAchieved).toLocaleDateString()}
-                    </p>
-                    <p>
-                        &nbsp;- v{topEntry.version}
-                    </p>
+                        <p>
+                            &nbsp;- {new Date(topEntry.timeAchieved).toLocaleDateString()}
+                        </p>
+                        <p>
+                            &nbsp;- v{topEntry.version}
+                        </p>
+                    </div>
                 </div>
-            </div>
-        {/each}
-    {:else}
-        <p class="text-white/50 text-sm">Loading...</p>
-    {/if}
+            {/each}
+        {:else}
+            <p class="text-white/50 text-sm">Loading...</p>
+        {/if}
+    </div>
 </div>
 
 <style lang="postcss">

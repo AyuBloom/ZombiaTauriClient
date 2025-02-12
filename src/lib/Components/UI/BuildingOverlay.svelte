@@ -243,6 +243,8 @@
             n = buildings[buildingUid];
         if (!n) return stopWatching();
 
+        buildingTier = n.tier;
+
         if (shouldDisplay) {
             const offset =
                 (r.gridHeight / 2) * 48 * (game.renderer.scale / window.devicePixelRatio);
@@ -253,8 +255,9 @@
                 (aggro = t.targetTick.aggroEnabled ? "all" : "aggressive");
 
             isMaxTier =
-                buildingTier >= t.tiers ||
-                ("Factory" !== buildingId && buildingTier >= game.ui.factory.tier);
+                buildingId == "Factory"
+                    ? r.tiers <= buildingTier
+                    : game.ui.factory.tier <= buildingTier;
         }
         if (
             1 == shouldUpdateRanges &&
@@ -330,7 +333,7 @@
             } else {
                 harvesterSelectorModel.setVisible(false);
                 drawRange(buildingUid);
-                if (game.inputPacketManager.shiftDown) {
+                if (shiftDown) {
                     for (let t in game.ui.buildings) {
                         if (
                             game.ui.buildings[t].type == buildingId &&
@@ -389,7 +392,7 @@
         let e = new Set();
         e.add(buildingUid);
 
-        if (game.inputPacketManager.shiftDown) {
+        if (shiftDown) {
             for (const t in buildings) {
                 const r = buildings[t];
                 if (r.type == buildingId && r.tier == buildingTier && t !== buildingUid) {
@@ -409,7 +412,7 @@
         let e = new Set();
         e.add(buildingUid);
 
-        if (game.inputPacketManager.shiftDown) {
+        if (shiftDown) {
             for (const t in buildings) {
                 const r = buildings[t];
                 if (r.type == buildingId && r.tier == buildingTier) {
@@ -593,11 +596,17 @@
         <div class="flex flex-col w-full gap-1">
             <button
                 onclick={upgradeBuilding}
-                class="flex-1 bg-accent-green after:content-['(E)']"
-                >Upgrade ({@html game.util.createResourceCostString(
+                class="{(
+                    buildingId == 'Factory'
+                        ? buildingData[buildingId].tiers <= buildingTier
+                        : game.ui.factory.tier <= buildingTier
+                )
+                    ? 'disabled'
+                    : ''} flex-1 bg-accent-green after:content-['(E)']"
+                >Upgrade {shiftDown ? "All" : ""} ({@html game.util.createResourceCostString(
                     buildingData[buildingId],
                     isMaxTier ? buildingTier : buildingTier + 1,
-                    /* n */ 1,
+                    shiftDown ? buildingData[buildingId].built : 1,
                     true,
                 ).elem})</button
             >
@@ -605,10 +614,10 @@
                 <button
                     onclick={sellBuilding}
                     class="flex-1 bg-accent-red after:content-['(T)']"
-                    >Sell ({@html game.util.createResourceRefundString(
+                    >Sell {shiftDown ? "All" : ""} ({@html game.util.createResourceRefundString(
                         buildingData[buildingId],
                         buildingTier,
-                        /* n */ 1,
+                        shiftDown ? buildingData[buildingId].built : 1,
                     )})</button
                 >
             {/if}
