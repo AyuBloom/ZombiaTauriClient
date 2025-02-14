@@ -46,6 +46,12 @@
     $effect(() => {
         gameOptions.state && gameOptions.save();
     });
+
+    $effect(() => {
+        if (psk.value && psk.value.includes("zombia.io")) {
+            psk.value = psk.value.split("/").pop();
+        }
+    });
 </script>
 
 {#if !inGame}

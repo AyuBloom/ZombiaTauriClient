@@ -21,6 +21,8 @@ export default class {
   playerPartyCanSell = $state(false);
   playerPartyCanPlace = $state(false);
 
+  isFollowingPartyMember = $state(0);
+
   isDisplayingMenu = $state(null);
 
   castingSpell = $state(false);
@@ -65,6 +67,7 @@ export default class {
       this.game.eventEmitter.on("mouseDown", this.onMouseDown.bind(this));
       this.game.eventEmitter.on("rightMouseUp", this.onRightMouseUp.bind(this));
       this.game.eventEmitter.on("27Up", this.hideMenu.bind(this));
+      this.game.eventEmitter.on("192Up", this.toggleView.bind(this));
       /*
           this.game.eventEmitter.on("SocketOpened", this.onSocketOpened.bind(this)),
           this.game.eventEmitter.on("SocketClosed", this.onSocketClosed.bind(this)),
@@ -113,6 +116,18 @@ export default class {
     this.playerPartyMembers = t;
     this.playerPartyCanSell = true === t.find((t) => t.uid === r).canSell;
     this.playerPartyCanPlace = true === t.find((t) => t.uid === r).canPlace;
+
+    this.isFollowingPartyMember = t.findIndex((t) => t.uid === r);
+    if (
+      this.playerPartyMembers[this.isFollowingPartyMember].uid in
+      this.game.renderer.world.entities
+    ) {
+      this.game.renderer.followingObject =
+        this.game.renderer.world.entities[
+          this.playerPartyMembers[this.isFollowingPartyMember].uid
+        ];
+    }
+
     this.game.eventEmitter.emit("PartyMembersUpdated", t);
     for (const t in this.buildingData) {
       const r = this.buildingData[t];
@@ -235,6 +250,14 @@ export default class {
   }
   hideMenu() {
     this.isDisplayingMenu = null;
+  }
+  toggleView() {
+    this.isFollowingPartyMember =
+      (this.isFollowingPartyMember + 1) % this.playerPartyMembers.length;
+    this.game.renderer.followingObject =
+      this.game.renderer.world.entities[
+        this.playerPartyMembers[this.isFollowingPartyMember].uid
+      ];
   }
 }
 

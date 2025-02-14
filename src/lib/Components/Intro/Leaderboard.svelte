@@ -80,7 +80,7 @@
                 <div
                     in:fade={{ duration: 200 }}
                     animate:flip={{ duration: 200 }}
-                    class="text-white/50 text-sm mb-2 mr-2 w-4/10 overflow-x-hidden"
+                    class="text-white/50 text-sm mb-2 mr-2 overflow-x-hidden"
                 >
                     <p>
                         {#each topEntry.players as playerName, index}

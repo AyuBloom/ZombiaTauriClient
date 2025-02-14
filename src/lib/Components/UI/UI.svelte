@@ -19,6 +19,7 @@
     import PopupOverlay from "./PopupOverlay.svelte";
 
     import { gameSettings } from "$lib/Engine/shared.svelte";
+    import MenuSettings from "./MenuSettings.svelte";
 
     let { game } = $props();
 
@@ -55,6 +56,7 @@
     <!-- Center -->
     <MenuShop {game} />
     <MenuParties {game} />
+    <MenuSettings {game} />
 
     <!-- Dynamic -->
     <PipOverlay {game} />
