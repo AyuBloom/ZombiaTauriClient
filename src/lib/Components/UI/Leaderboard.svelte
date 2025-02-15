@@ -3,6 +3,7 @@
     import { gameOptions } from "$lib/Engine/shared.svelte.js";
 
     import Long from "long";
+    import { isMobile } from "pixi.js";
 
     // const MARGIN_TO_CENTER = 50;
 
@@ -36,17 +37,19 @@
         <span class="score">Score</span>
         <span class="wave">Wave</span>
     </div>
-    {#each data as player}
-        {@const shouldHighlight =
-            player.uid == game.renderer.world.localPlayer ? "currentPlayer" : ""}
-        <div>
-            <span class="rank {shouldHighlight}">#{player.rank}</span>
-            <strong class="name {shouldHighlight}">{player.name}</strong>
-            <strong class="score {shouldHighlight}"
-                >{new Long(player.score).toNumber().toLocaleString()}</strong
-            >
-            <strong class="wave {shouldHighlight}">{new Long(player.wave)}</strong>
-        </div>
+    {#each data as player, i}
+        {#if !isMobile.any || i < 5}
+            {@const shouldHighlight =
+                player.uid == game.renderer.world.localPlayer ? "currentPlayer" : ""}
+            <div>
+                <span class="rank {shouldHighlight}">#{player.rank}</span>
+                <strong class="name {shouldHighlight}">{player.name}</strong>
+                <strong class="score {shouldHighlight}"
+                    >{new Long(player.score).toNumber().toLocaleString()}</strong
+                >
+                <strong class="wave {shouldHighlight}">{new Long(player.wave)}</strong>
+            </div>
+        {/if}
     {/each}
 </div>
 

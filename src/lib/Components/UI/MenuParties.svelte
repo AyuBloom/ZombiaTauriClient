@@ -150,35 +150,36 @@
                 ? 'disabled'
                 : ''} flex flex-row flex-wrap justify-between content-start w-full h-full transition"
         >
-            <!-- {#if Object.keys(parties).length > 1 || currentParty.isOpen} -->
-            {#each Object.values(parties) as party}
-                {@const isPlayersParty = game.ui.playerTick?.partyId == party.partyId}
-                {@const isFull = party.memberCount >= party.memberLimit}
-                {#if party.isOpen === true || party.isOpen === undefined}
-                    <button
-                        onclick={() => {
-                            if (isPlayersParty) return;
-                            isRequesting = party.partyId;
-                            game.network.sendRpc({
-                                name: "JoinParty",
-                                partyId: party.partyId,
-                            });
-                        }}
-                        class="{isPlayersParty ? 'focused' : ''} {isFull
-                            ? 'disabled'
-                            : ''} flex flex-col basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
-                    >
-                        <strong>{party.partyName}</strong>
-                        <span class="opacity-70"
-                            >{party.memberCount}/{party.memberLimit}</span
+            {#if Object.keys(parties).length > 1 || currentParty.isOpen}
+                {#each Object.values(parties) as party}
+                    {@const isPlayersParty = game.ui.playerTick?.partyId == party.partyId}
+                    {@const isFull = party.memberCount >= party.memberLimit}
+                    {#if party.isOpen === true || party.isOpen === undefined}
+                        <button
+                            onclick={() => {
+                                if (isPlayersParty) return;
+                                isRequesting = party.partyId;
+                                game.network.sendRpc({
+                                    name: "JoinParty",
+                                    partyId: party.partyId,
+                                });
+                            }}
+                            class="{isPlayersParty ? 'focused' : ''} {isFull
+                                ? 'disabled'
+                                : ''} flex flex-col basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
                         >
-                    </button>
-                {/if}
-            {/each}
+                            <strong>{party.partyName}</strong>
+                            <span class="opacity-70"
+                                >{party.memberCount}/{party.memberLimit}</span
+                            >
+                        </button>
+                    {/if}
+                {/each}
+                <!--
             {#if Object.keys(parties).length > 1 || currentParty.isOpen}
                 <hr class="ml-auto mr-auto mt-2 mb-2 border-dashed w-full" />
             {/if}
-            <!--
+            -->
             {:else if !currentParty.isOpen}
                 <p
                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70"
@@ -186,7 +187,8 @@
                     No open parties
                 </p>
             {/if}
-            -->
+
+            <!--
             <input
                 onkeyup={(t) => {
                     t.stopPropagation();
@@ -197,6 +199,7 @@
                 class="relative w-full h-10 rounded-sm p-2 mt-2 text-center bg-white/10 text-white placeholder:text-white/50"
                 placeholder="Join by party share key..."
             />
+            -->
         </div>
     {/if}
 {/snippet}

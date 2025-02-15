@@ -37,6 +37,12 @@
                     animation: false,
                 };
             }}
+            onmouseup={(t) => {
+                t.stopPropagation();
+            }}
+            onmousedown={(t) => {
+                t.stopPropagation();
+            }}
             onclick={() => game.ui.showMenu(name)}
             class="relative w-10 h-10 p-2 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:shadow-sm"
         >

@@ -80,7 +80,7 @@
 
 <div
     style="bottom: {MOVE_WHEN ? '4rem' : '0.5rem'};"
-    class="absolute right-1 w-36 h-36 bg-black/40 rounded-sm"
+    class="absolute right-1 w-36 h-36 sm:w-30 sm:h-30 bg-black/40 rounded-sm"
 >
     {#each Object.values(playerData) as player}
         <div

@@ -35,11 +35,19 @@
     /* unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF; */
 }
 
+body {
+    overflow: hidden;
+    /*
+    background-image: url("/images/Map/Grass.svg");
+    background-size: 24px;
+    */
+}
+
 h1,
 h2 {
     font-family: "Hammersmith One", Arial, Helvetica, sans-serif;
 }
 
 canvas {
-    @apply absolute block w-screen h-screen top-0 left-0 m-0 p-0;
+    @apply absolute block w-full h-full;
 }

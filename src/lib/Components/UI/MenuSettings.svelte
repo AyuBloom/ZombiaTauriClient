@@ -17,7 +17,7 @@
             class="absolute text-white text-2xl top-2 right-4 rotate-45 transition opacity-70 hover:opacity-100"
             onclick={() => game.ui.hideMenu()}>+</button
         >
-        <h2 class="text-white mb-2">Menu</h2>
+        <h2 class="text-white mb-2">Settings</h2>
         <div
             class="flex flex-row grow w-full bg-black/20 rounded-sm rounded-tl-none"
         ></div>

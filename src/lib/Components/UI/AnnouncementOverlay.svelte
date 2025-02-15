@@ -13,7 +13,7 @@
 {#if game.ui.announcement !== null}
     <p
         style="animation-duration: {game.ui.announcement.timeout}ms;"
-        class="message fixed top-40 left-3/10 right-3/10 text-white text-2xl text-center z-40"
+        class="message fixed top-2/10 left-3/10 right-3/10 text-white text-2xl text-center z-40"
     >
         {game.ui.announcement.announcement}
     </p>

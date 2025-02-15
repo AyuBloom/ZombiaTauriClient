@@ -6,6 +6,7 @@
     import { gameOptions, psk } from "$lib/Engine/shared.svelte.js";
     import servers from "$lib/Assets/servers.json";
     import { fade } from "svelte/transition";
+    import { isMobile } from "pixi.js";
 
     const { game } = $props();
     let inGame = $state(false);
@@ -67,9 +68,7 @@
             >
                 <p class="font-bold text-3xl">Play</p>
                 <hr class="w-full border mt-2 mb-2" />
-                <span class="text-xl"
-                    >{game.util.isActuallyMobile ? "Tap" : "Click"} to enter</span
-                >
+                <span class="text-xl">{isMobile.any ? "Tap" : "Click"} to enter</span>
             </button>
             <Footer />
             <Leaderboard />

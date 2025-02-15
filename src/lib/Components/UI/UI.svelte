@@ -32,7 +32,7 @@
     });
 </script>
 
-<div class="hud absolute w-screen h-screen top-0 left-0 z-20">
+<div class="hud absolute w-full h-full z-20">
     <!-- Top -->
     <Chat {game} />
     <MenuIcons {game} />

@@ -36,7 +36,7 @@
 </script>
 
 <div
-    class="absolute top-0 left-0 w-screen h-screen pointer-events-none -z-1 transition"
+    class="absolute w-full h-full pointer-events-none -z-1 transition"
     style="opacity: {overlayOpacity}"
 ></div>
 

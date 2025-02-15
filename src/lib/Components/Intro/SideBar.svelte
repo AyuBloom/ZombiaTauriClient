@@ -38,7 +38,7 @@
                 >
             {/each}
         </select>
-        <span class="text-white/50 text-xs"
+        <span class="sm:hidden text-white/50 text-xs"
             >{descriptionForModes[gameOptions.state.mode]}</span
         >
     </div>
@@ -89,6 +89,9 @@
 
 <style lang="postcss">
     @reference "tailwindcss/theme";
+
+    @media only screen and (hover: none) {
+    }
 
     div {
         @apply w-full;

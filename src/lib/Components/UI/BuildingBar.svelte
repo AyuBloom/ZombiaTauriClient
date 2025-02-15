@@ -32,15 +32,27 @@
 
 <div
     style="scrollbar-width: none;"
-    class="fixed flex flex-row left-1 bottom-1 w-screen overflow-x-auto scroll-p"
+    class="absolute flex flex-row left-1 bottom-1 w-screen overflow-x-auto scroll-p"
 >
     {#each buildings as tower}
         {#if tower !== "Factory" || game.ui.factory === null}
             <button
                 class="{tower !== 'Factory' && game.ui.factory === null
                     ? 'disabled'
-                    : ''} relative min-w-12 w-12 h-12 p-1 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
-                onclick={() => game.ui.PlacementOverlay.startPlacing(tower)}
+                    : ''} relative min-w-12 w-12 h-12 sm:w-10 sm:min-w-10 sm:h-10 p-1 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
+                onmouseup={(t) => {
+                    t.stopPropagation();
+                }}
+                onmousedown={(t) => {
+                    t.stopPropagation();
+                }}
+                onclick={() => {
+                    if (game.ui.PlacementOverlay.buildingType) {
+                        game.ui.PlacementOverlay.cancelPlacing();
+                    } else {
+                        game.ui.PlacementOverlay.startPlacing(tower);
+                    }
+                }}
                 use:tooltip={() => {
                     return {
                         content: `<strong>${tower.split(/(?=[A-Z])/).join(" ")}</strong><span>${game.ui.buildingData[tower].built}/${game.ui.buildingData[tower].limit}</span>`,
@@ -50,7 +62,7 @@
                 }}
             >
                 <img
-                    class="w-10 h-10"
+                    class="w-10 h-10 sm:w-8 sm:h-8"
                     alt={tower}
                     src="/images/Ui/Buildings/{tower}/{tower}Tier1.svg"
                 />
