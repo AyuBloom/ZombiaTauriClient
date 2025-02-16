@@ -4,6 +4,7 @@
 
     import { innerWidth } from "svelte/reactivity/window";
 
+    /*
     let BUILDING_BAR_WIDTH = $derived.by(() => {
         let defaultValue = 672;
 
@@ -14,6 +15,7 @@
     });
     const MINIMAP_WIDTH = 160;
     let MOVE_WHEN = $derived(innerWidth.current < BUILDING_BAR_WIDTH + MINIMAP_WIDTH);
+    */
 
     let playerData = $state({});
     let buildingData = $state({});
@@ -79,8 +81,7 @@
 </script>
 
 <div
-    style="bottom: {MOVE_WHEN ? '4rem' : '0.5rem'};"
-    class="absolute right-1 w-36 h-36 sm:w-30 sm:h-30 bg-black/40 rounded-sm"
+    class="absolute right-1 bottom-14 md:bottom-2 md:w-36 md:h-36 w-30 h-30 bg-black/40 rounded-sm"
 >
     {#each Object.values(playerData) as player}
         <div

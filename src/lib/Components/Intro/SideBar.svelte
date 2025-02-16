@@ -38,7 +38,7 @@
                 >
             {/each}
         </select>
-        <span class="sm:hidden text-white/50 text-xs"
+        <span class="hidden md:block text-white/50 text-xs"
             >{descriptionForModes[gameOptions.state.mode]}</span
         >
     </div>

@@ -18,8 +18,19 @@
             onclick={() => game.ui.hideMenu()}>+</button
         >
         <h2 class="text-white mb-2">Settings</h2>
-        <div
-            class="flex flex-row grow w-full bg-black/20 rounded-sm rounded-tl-none"
-        ></div>
+        <div class="flex flex-row grow w-full p-2 bg-black/20 rounded-sm rounded-tl-none">
+            <button
+                class="h-10 p-2 rounded text-white transition bg-accent-red hover:brightness-125"
+                onclick={() => {
+                    game.ui.pendingPopups.push({
+                        type: "confirmation",
+                        message: "Reload the game? Changes you made may not be saved.",
+                        callback: () => {
+                            location.reload();
+                        },
+                    });
+                }}>Reload game</button
+            >
+        </div>
     </div>
 {/if}

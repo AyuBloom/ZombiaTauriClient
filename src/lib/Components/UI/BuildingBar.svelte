@@ -32,14 +32,14 @@
 
 <div
     style="scrollbar-width: none;"
-    class="absolute flex flex-row left-1 bottom-1 w-screen overflow-x-auto scroll-p"
+    class="absolute flex flex-row justify-between md:justify-normal left-1 bottom-1 w-screen overflow-x-auto scroll-p"
 >
     {#each buildings as tower}
         {#if tower !== "Factory" || game.ui.factory === null}
             <button
                 class="{tower !== 'Factory' && game.ui.factory === null
                     ? 'disabled'
-                    : ''} relative min-w-12 w-12 h-12 sm:w-10 sm:min-w-10 sm:h-10 p-1 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
+                    : ''} relative lg:min-w-12 lg:w-12 lg:h-12 w-10 min-w-10 h-10 p-1 bg-black/30 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
                 onmouseup={(t) => {
                     t.stopPropagation();
                 }}
@@ -62,7 +62,7 @@
                 }}
             >
                 <img
-                    class="w-10 h-10 sm:w-8 sm:h-8"
+                    class="lg:w-10 lg:h-10 w-8 h-8"
                     alt={tower}
                     src="/images/Ui/Buildings/{tower}/{tower}Tier1.svg"
                 />

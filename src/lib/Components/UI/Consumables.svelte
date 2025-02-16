@@ -96,7 +96,7 @@
 </script>
 
 <div
-    class="border-l-2 border-white/50 left-50 bottom-16 h-12 sm:left-44 sm:bottom-14 sm:h-10 absolute z-20"
+    class="flex border-l-2 border-white/50 lg:left-50 lg:bottom-16 lg:h-12 left-44 bottom-14 h-10 absolute z-20"
 >
     {#each consumablesData as consumable}
         {#if !isDisabled[consumable.name]}
@@ -136,10 +136,10 @@
                         animation: false,
                     };
                 }}
-                class="relative w-10 h-10 sm:w-8 sm:h-8 p-1 m-1 transition"
+                class="relative lg:w-10 lg:h-10 w-8 h-8 p-1 m-1 transition"
             >
                 <img
-                    class="w-8 h-8 sm:w-6 sm:h-6 transition opacity-70 hover:opacity-100"
+                    class="lg:w-8 lg:h-8 w-6 h-6 transition opacity-70 hover:opacity-100"
                     alt={consumable.name}
                     src="/images/Ui/Icons/{consumable.class == 'Potion'
                         ? 'Potions'

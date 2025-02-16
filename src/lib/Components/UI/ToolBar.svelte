@@ -50,7 +50,7 @@
 
 <div
     style="scrollbar-width: none;"
-    class="absolute flex flex-row left-1 bottom-16 sm:bottom-14 w-screen overflow-x-auto scroll-p"
+    class="absolute flex flex-row left-1 lg:bottom-16 bottom-14 w-screen overflow-x-auto scroll-p"
 >
     {#each Object.entries(tools) as [toolName, toolTier]}
         <button
@@ -63,11 +63,11 @@
             }}
             class="{toolTier
                 ? ''
-                : 'disabled'} relative min-w-10 w-10 h-10 sm:min-w-8 sm:w-8 sm:h-8 p-1 bg-black/20 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
+                : 'disabled'} relative lg:min-w-10 lg:w-10 lg:h-10 min-w-8 w-8 h-8 p-1 bg-black/20 m-1 rounded-sm transition hover:bg-black/10 hover:brightness-150"
         >
             {#if toolTier}
                 <img
-                    class="w-8 h-8 sm:w-6 sm:h-6"
+                    class="lg:w-8 lg:h-8 w-6 h-6"
                     alt={toolName}
                     src="/images/Ui/Icons/Tools/{toolName}Tier{toolTier}.svg"
                 />
