@@ -81,6 +81,7 @@ const SPRITE_SHEET = `<svg xmlns='http://www.w3.org/2000/svg'><svg id="Entity/Ar
   `;
 
 export default class {
+  isWebGl = $state(false);
   constructor(game) {
     this.game = game;
 
@@ -122,6 +123,8 @@ export default class {
     window.PIXI = PIXI;
 
     await this.initialiseRendererInstance();
+    this.isWebGL = this.renderer.renderer instanceof PIXI.WebGLRenderer;
+
     this.replicator = new Replicator(this.game);
     this.world.init();
     this.game.eventEmitter.on("EnterWorldResponse", this.onEnterWorld.bind(this));
@@ -140,10 +143,12 @@ export default class {
     this.renderer.canvas.oncontextmenu = (t) => t.preventDefault();
     document.body.children[0].appendChild(this.renderer.canvas);
 
-    this.renderer.canvas.addEventListener("webglcontextlost", async (t) => {
-      document.body.children[0].removeChild(this.renderer.canvas),
+    if (this.isWebGL) {
+      this.renderer.canvas.addEventListener("webglcontextlost", async (t) => {
+        document.body.children[0].removeChild(this.renderer.canvas);
         await this.initialiseRendererInstance();
-    });
+      });
+    }
 
     this.scene = new Node(this.game);
 
@@ -332,7 +337,8 @@ export default class {
   }
   update(t) {
     if (
-      1 == this.renderer.renderer.context.isLost &&
+      this.isWebGL &&
+      1 == this.renderer.renderer?.context?.isLost &&
       performance.now() - this.contextLostTime > 5e3
     ) {
       console.log("Context has been lost for too long! Re-initialising PIXI.");
