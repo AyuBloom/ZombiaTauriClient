@@ -1,8 +1,12 @@
+<script>
+    import { GAME_VERSION } from "$lib/id.json";
+</script>
+
 <div class="hud-intro-footer absolute bottom-4 left-4">
-    <p>Version 1.2.2-tauri</p>
+    <p>Version {GAME_VERSION}</p>
     <br />
-    <p>Made by <strong>Apex</strong> and <strong>Xperience</strong></p>
-    <p>Client by <strong>AyuBloom</strong></p>
+    <p>Original by <strong>Apex</strong> and <strong>Xperience</strong></p>
+    <p>Fanmade client by <strong>AyuBloom</strong></p>
 </div>
 
 <style lang="postcss">

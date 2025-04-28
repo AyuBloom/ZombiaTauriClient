@@ -16,6 +16,17 @@
           "url": "http://zombia.io/*"
         }
       ]
+    },
+    "shell:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/server",
+          "sidecar": true,
+          "args": true
+        }
+      ]
     }
   ]
 }

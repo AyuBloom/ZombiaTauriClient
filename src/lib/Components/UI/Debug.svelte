@@ -5,11 +5,17 @@
 
     let fps = $state(0);
     let frameTime = $state(0);
+    let lastTick = Date.now();
+    let msSinceLastTick = $state(0);
     let isWebGL = $state(null);
     let isWebGPU = $state(null);
 
     game.eventEmitter.on("EntityUpdate", (e) => {
         frameTime = e.averageServerFrameTime;
+
+        let now = Date.now();
+        msSinceLastTick = now - lastTick;
+        lastTick = now;
 
         if (isWebGL === null || isWebGPU === null) {
             isWebGL = game.renderer.renderer.renderer instanceof PIXI.WebGLRenderer;
@@ -23,9 +29,7 @@
 
 <div class="absolute lg:bottom-28 bottom-24 left-2 text-white">
     <p class={frameTime > 50 ? "overloaded" : frameTime > 30 ? "stressed" : ""}>
-        {game.network.ping}ms {frameTime > 50
-            ? `(` + (50 - frameTime).toFixed(2) + `ms)`
-            : ""}
+        {game.network.ping}ms / {frameTime}ms / {Math.round(1000 / msSinceLastTick)} TPS
     </p>
     {#if !isMobile.any}
         <p>

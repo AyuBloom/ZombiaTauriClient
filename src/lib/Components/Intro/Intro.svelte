@@ -1,4 +1,6 @@
 <script>
+    import { Command } from "@tauri-apps/plugin-shell";
+
     import SideBar from "./SideBar.svelte";
     import Footer from "./Footer.svelte";
     import Leaderboard from "./Leaderboard.svelte";
@@ -12,7 +14,13 @@
     let inGame = $state(false);
 
     // let introAnimation = $state(true);
-    function connect() {
+    async function connect() {
+        const command = Command.sidecar("binaries/server", [
+            "8000",
+            gameOptions.state.mode,
+        ]);
+        const output = await command.execute();
+        console.log(output.stdout);
         /*
         if (!this.playElem.classList.contains("is-disabled")) {
             this.playElem.innerHTML = "<span class='hud-loading'></span>";
@@ -71,7 +79,7 @@
                 <span class="text-xl">{isMobile.any ? "Tap" : "Click"} to enter</span>
             </button>
             <Footer />
-            <Leaderboard />
+            <!-- <Leaderboard /> -->
         </div>
     </div>
 {/if}

@@ -1,0 +1,28 @@
+{
+  "name": "javascript_server_src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node start.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bytebuffer": "^5.0.1",
+    "deepool": "^3.0.1",
+    "dotenv": "^16.5.0",
+    "heap": "^0.2.7",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.13.2",
+    "obscenity": "^0.4.3",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@dimforge/rapier2d-compat": "^0.11.1",
+    "@yao-pkg/pkg": "^6.4.0"
+  }
+}

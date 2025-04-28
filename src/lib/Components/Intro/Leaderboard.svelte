@@ -25,7 +25,13 @@
 
             const data = await fetch(
                 `http://zombia.io/leaderboard/data?category=${category}&time=${time}&gameMode=${mode}`,
-            ).then((t) => t.json());
+            )
+                .then((t) => t.json())
+                .catch((error) => {
+                    console.warn("Error fetching data:", error);
+                });
+
+            if (!data) return;
 
             topEntries = data.slice(0, entries);
             loading = false;

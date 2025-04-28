@@ -1,0 +1,12 @@
+{
+    "0": "PACKET_ENTITY_UPDATE",
+    "3": "PACKET_INPUT",
+    "4": "PACKET_ENTER_WORLD",
+    "7": "PACKET_PING",
+    "9": "PACKET_RPC",
+    "PACKET_ENTITY_UPDATE": 0,
+    "PACKET_INPUT": 3,
+    "PACKET_ENTER_WORLD": 4,
+    "PACKET_PING": 7,
+    "PACKET_RPC": 9
+}
