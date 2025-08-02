@@ -1,18 +1,34 @@
 [
   {
-    "id": "v01001",
-    "status": "",
-    "country": "Local",
-    "city": "",
-    "port": "8000",
+    "id": "v04001",
+    "status": "Low",
+    "country": "Australia",
+    "city": "Sydney",
+    "port": 8000,
     "gameMode": "standard"
   },
   {
-    "id": "v01002",
-    "status": "",
-    "country": "Local",
-    "city": "",
-    "port": "8000",
+    "id": "v03001",
+    "status": "Empty",
+    "country": "Germany",
+    "city": "Frankfurt",
+    "port": 8000,
+    "gameMode": "standard"
+  },
+  {
+    "id": "v01001",
+    "status": "Empty",
+    "country": "USA",
+    "city": "Los Angeles",
+    "port": 8000,
+    "gameMode": "standard"
+  },
+  {
+    "id": "v03002",
+    "status": "Low",
+    "country": "Germany",
+    "city": "Frankfurt",
+    "port": 8000,
     "gameMode": "scarcity"
   }
 ]

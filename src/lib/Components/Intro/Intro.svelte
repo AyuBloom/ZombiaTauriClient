@@ -13,14 +13,15 @@
     const { game } = $props();
     let inGame = $state(false);
 
-    // let introAnimation = $state(true);
     async function connect() {
+        /*
         const command = Command.sidecar("binaries/server", [
             "8000",
             gameOptions.state.mode,
         ]);
         const output = await command.execute();
         console.log(output.stdout);
+        */
         /*
         if (!this.playElem.classList.contains("is-disabled")) {
             this.playElem.innerHTML = "<span class='hud-loading'></span>";
@@ -57,6 +58,7 @@
     });
 
     $effect(() => {
+        // if user pastes in a link, the input box will still take it
         if (psk.value && psk.value.includes("zombia.io")) {
             psk.value = psk.value.split("/").pop();
         }
@@ -79,7 +81,7 @@
                 <span class="text-xl">{isMobile.any ? "Tap" : "Click"} to enter</span>
             </button>
             <Footer />
-            <!-- <Leaderboard /> -->
+            <Leaderboard />
         </div>
     </div>
 {/if}

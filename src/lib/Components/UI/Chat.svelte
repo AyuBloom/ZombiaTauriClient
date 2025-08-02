@@ -37,18 +37,16 @@
     game.eventEmitter.on("27Up", () => {
         1 == isTyping && (isTyping = false);
     });
-    /*
     game.eventEmitter.on("mouseDown", () => {
         1 == isTyping && (isTyping = false);
     });
-    */
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <div
     class="{isTyping
         ? 'focused'
-        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition pointer-events-none z-999"
+        : ''} absolute top-0 left-0 h-60 w-80 p-2 rounded-br-md text-white transition"
 >
     <div class="min-w-78 w-78 h-48 overflow-x-hidden overflow-y-auto" bind:this={chatBox}>
         {#each msgs as { channel, message, name, date }}
@@ -56,8 +54,11 @@
                 style="word-wrap: anywhere;"
                 class="flex flex-row gap-1 relative mb-1 text-xs"
             >
-                <strong style="word-wrap: initial;" class="text-accent-red font-bold"
-                    >[{channel}]</strong
+                <strong
+                    style="word-wrap: initial;"
+                    class="{channel == 'All'
+                        ? 'text-accent-red'
+                        : 'text-accent-green'} font-bold">[{channel}]</strong
                 >
                 <span style="word-wrap: initial;" class="font-bold">{name}:</span>
                 {message}

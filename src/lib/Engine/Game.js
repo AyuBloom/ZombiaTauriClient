@@ -10,13 +10,6 @@ import InputPacketManager from "./InputPacketManager.js";
 
 export default new (class {
   constructor() {
-    /*
-    this.Server = new Server({
-      port: 8000,
-      gameMode: "standard",
-    });
-    */
-
     this.ui = new UI(this);
     this.network = new Network(this);
     this.renderer = new Renderer(this);

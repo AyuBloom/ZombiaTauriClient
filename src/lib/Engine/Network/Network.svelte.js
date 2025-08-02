@@ -19,10 +19,6 @@ export default class {
     this.options = {};
   }
   init() {
-    this.game.eventEmitter.on(
-      "ModelPropsRpcReceived",
-      this.codec.onModelProps.bind(this.codec),
-    );
     document.onvisibilitychange = this.onVisibilityChange.bind(this);
   }
   setConnectionData(t, e, r) {
@@ -35,12 +31,10 @@ export default class {
   connect() {
     if (!this.connected || !this.connecting) {
       this.connecting = true;
-      /*
       this.socket = new WebSocket(
         `ws://server-${this.options.serverData.id}.zombia.io:${this.options.serverData.port}`,
       );
-      */
-      this.socket = new WebSocket(`ws://localhost:${this.options.serverData.port}`);
+      // this.socket = new WebSocket(`ws://localhost:${this.options.serverData.port}`);
       this.socket.binaryType = "arraybuffer";
       this.bindAllListeners();
     }

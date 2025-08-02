@@ -166,7 +166,7 @@
                             }}
                             class="{isPlayersParty ? 'focused' : ''} {isFull
                                 ? 'disabled'
-                                : ''} flex flex-col basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
+                                : ''} flex flex-col items-start basis-49/100 h-16 mb-2 p-2 text-white rounded-sm transition bg-white/10 hover:bg-white/30"
                         >
                             <strong>{party.partyName}</strong>
                             <span class="opacity-70"
@@ -232,7 +232,7 @@
                     class="grow pr-2 border-r-2 border-gray/10"
                     type="text"
                     maxlength="0"
-                    placeholder="zombia.io/#/v1rotate/hawktuah"
+                    placeholder="zombia.io/#/v1/rotate"
                     value="http://zombia.io/#/{game.network.options.serverData
                         .id}/{partyShareKey}"
                     onfocus={({ target: _this }) => {
